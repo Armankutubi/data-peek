@@ -41,8 +41,10 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { useTabStore, useConnectionStore } from '@/stores'
 import { useDDLStore, type ValidationError } from '@/stores/ddl-store'
 import type { TableDesignerTab } from '@/stores/tab-store'
-import type { ColumnDefinition, PostgresDataType } from '@data-peek/shared'
+import type { ColumnDefinition, PostgresDataType, ConstraintType } from '@data-peek/shared'
 import { cn } from '@/lib/utils'
+import { ConstraintEditor } from '@/components/constraint-editor'
+import { IndexEditor } from '@/components/index-editor'
 
 // PostgreSQL data types grouped by category
 const DATA_TYPE_GROUPS = {
@@ -94,6 +96,14 @@ export function TableDesigner({ tabId }: TableDesignerProps) {
     removeColumn,
     duplicateColumn,
     selectColumn,
+    addConstraint,
+    updateConstraint,
+    removeConstraint,
+    selectConstraint,
+    addIndex,
+    updateIndex,
+    removeIndex,
+    selectIndex,
     setLoading,
     setSaving,
     setError,
@@ -454,10 +464,18 @@ export function TableDesigner({ tabId }: TableDesignerProps) {
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className="border-t border-border/40 p-4">
-                  <p className="text-sm text-muted-foreground">
-                    Constraint editor coming soon. Use column-level PK and UNIQUE for now.
-                  </p>
+                <div className="border-t border-border/40 p-3">
+                  <ConstraintEditor
+                    constraints={definition.constraints}
+                    columns={definition.columns}
+                    schemas={schemas}
+                    validationErrors={validationErrors}
+                    onAdd={(type: ConstraintType) => addConstraint(tabId, type)}
+                    onUpdate={(id, updates) => updateConstraint(tabId, id, updates)}
+                    onRemove={(id) => removeConstraint(tabId, id)}
+                    onSelect={(id) => selectConstraint(tabId, id)}
+                    selectedId={state?.selectedConstraintId ?? null}
+                  />
                 </div>
               </CollapsibleContent>
             </div>
@@ -483,8 +501,17 @@ export function TableDesigner({ tabId }: TableDesignerProps) {
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className="border-t border-border/40 p-4">
-                  <p className="text-sm text-muted-foreground">Index editor coming soon.</p>
+                <div className="border-t border-border/40 p-3">
+                  <IndexEditor
+                    indexes={definition.indexes}
+                    columns={definition.columns}
+                    validationErrors={validationErrors}
+                    onAdd={() => addIndex(tabId)}
+                    onUpdate={(id, updates) => updateIndex(tabId, id, updates)}
+                    onRemove={(id) => removeIndex(tabId, id)}
+                    onSelect={(id) => selectIndex(tabId, id)}
+                    selectedId={state?.selectedIndexId ?? null}
+                  />
                 </div>
               </CollapsibleContent>
             </div>
