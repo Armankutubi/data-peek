@@ -12,7 +12,8 @@ import type {
   CustomTypeInfo,
   LicenseStatus,
   LicenseActivationRequest,
-  LicenseType
+  LicenseType,
+  SavedQuery
 } from '@shared/index'
 
 interface DataPeekApi {
@@ -77,6 +78,14 @@ interface DataPeekApi {
       type?: LicenseType,
       daysValid?: number
     ) => Promise<IpcResponse<LicenseStatus>>
+  }
+  savedQueries: {
+    list: () => Promise<IpcResponse<SavedQuery[]>>
+    add: (query: SavedQuery) => Promise<IpcResponse<SavedQuery>>
+    update: (id: string, updates: Partial<SavedQuery>) => Promise<IpcResponse<SavedQuery>>
+    delete: (id: string) => Promise<IpcResponse<void>>
+    incrementUsage: (id: string) => Promise<IpcResponse<SavedQuery>>
+    onOpenDialog: (callback: () => void) => () => void
   }
 }
 

@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router'
 
 import { ConnectionSwitcher } from '@/components/connection-switcher'
 import { QueryHistory } from '@/components/query-history'
+import { SavedQueries } from '@/components/saved-queries'
 import { SchemaExplorer } from '@/components/schema-explorer'
 import { SidebarQuickQuery } from '@/components/sidebar-quick-query'
 import {
@@ -41,6 +42,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Query History */}
         <QueryHistory />
+
+        <SidebarSeparator className="mx-3" />
+
+        {/* Saved Queries */}
+        <SavedQueries />
 
         {/* Secondary Navigation - Settings & Help */}
         <SidebarGroup className="mt-auto">

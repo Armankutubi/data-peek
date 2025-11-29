@@ -8,7 +8,8 @@ import type {
   EditResult,
   TableDefinition,
   AlterTableBatch,
-  DDLResult
+  DDLResult,
+  SavedQuery
 } from '@shared/index'
 import { buildQuery, validateOperation, buildPreviewSql } from './sql-builder'
 import {
@@ -33,7 +34,9 @@ import type { LicenseActivationRequest } from '@shared/index'
 
 // electron-store v11 is ESM-only, use dynamic import
 type StoreType = import('electron-store').default<{ connections: ConnectionConfig[] }>
+type SavedQueriesStoreType = import('electron-store').default<{ savedQueries: SavedQuery[] }>
 let store: StoreType
+let savedQueriesStore: SavedQueriesStoreType
 
 async function initStore(): Promise<void> {
   const Store = (await import('electron-store')).default
@@ -42,6 +45,14 @@ async function initStore(): Promise<void> {
     encryptionKey: 'data-peek-secure-storage-key', // Encrypts sensitive data
     defaults: {
       connections: []
+    }
+  })
+
+  savedQueriesStore = new Store<{ savedQueries: SavedQuery[] }>({
+    name: 'data-peek-saved-queries',
+    encryptionKey: 'data-peek-secure-storage-key',
+    defaults: {
+      savedQueries: []
     }
   })
 }
@@ -619,6 +630,92 @@ app.whenReady().then(async () => {
       }
     }
   )
+
+  // ============================================
+  // Saved Queries Handlers
+  // ============================================
+
+  // List all saved queries
+  ipcMain.handle('saved-queries:list', () => {
+    try {
+      const savedQueries = savedQueriesStore.get('savedQueries', [])
+      return { success: true, data: savedQueries }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      return { success: false, error: errorMessage }
+    }
+  })
+
+  // Add a new saved query
+  ipcMain.handle('saved-queries:add', (_, query: SavedQuery) => {
+    try {
+      const savedQueries = savedQueriesStore.get('savedQueries', [])
+      savedQueries.push(query)
+      savedQueriesStore.set('savedQueries', savedQueries)
+      return { success: true, data: query }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      return { success: false, error: errorMessage }
+    }
+  })
+
+  // Update a saved query
+  ipcMain.handle(
+    'saved-queries:update',
+    (_, { id, updates }: { id: string; updates: Partial<SavedQuery> }) => {
+      try {
+        const savedQueries = savedQueriesStore.get('savedQueries', [])
+        const index = savedQueries.findIndex((q) => q.id === id)
+        if (index === -1) {
+          return { success: false, error: 'Saved query not found' }
+        }
+        savedQueries[index] = {
+          ...savedQueries[index],
+          ...updates,
+          updatedAt: Date.now()
+        }
+        savedQueriesStore.set('savedQueries', savedQueries)
+        return { success: true, data: savedQueries[index] }
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        return { success: false, error: errorMessage }
+      }
+    }
+  )
+
+  // Delete a saved query
+  ipcMain.handle('saved-queries:delete', (_, id: string) => {
+    try {
+      const savedQueries = savedQueriesStore.get('savedQueries', [])
+      const filtered = savedQueries.filter((q) => q.id !== id)
+      savedQueriesStore.set('savedQueries', filtered)
+      return { success: true }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      return { success: false, error: errorMessage }
+    }
+  })
+
+  // Increment usage count for a saved query
+  ipcMain.handle('saved-queries:increment-usage', (_, id: string) => {
+    try {
+      const savedQueries = savedQueriesStore.get('savedQueries', [])
+      const index = savedQueries.findIndex((q) => q.id === id)
+      if (index === -1) {
+        return { success: false, error: 'Saved query not found' }
+      }
+      savedQueries[index] = {
+        ...savedQueries[index],
+        usageCount: savedQueries[index].usageCount + 1,
+        lastUsedAt: Date.now()
+      }
+      savedQueriesStore.set('savedQueries', savedQueries)
+      return { success: true, data: savedQueries[index] }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      return { success: false, error: errorMessage }
+    }
+  })
 
   await createWindow()
 

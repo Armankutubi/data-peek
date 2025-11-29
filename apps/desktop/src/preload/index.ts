@@ -13,7 +13,8 @@ import type {
   CustomTypeInfo,
   LicenseStatus,
   LicenseActivationRequest,
-  LicenseType
+  LicenseType,
+  SavedQuery
 } from '@shared/index'
 
 // Custom APIs for renderer
@@ -121,6 +122,22 @@ const api = {
       daysValid?: number
     ): Promise<IpcResponse<LicenseStatus>> =>
       ipcRenderer.invoke('license:activate-offline', { key, email, type, daysValid })
+  },
+  // Saved queries management
+  savedQueries: {
+    list: (): Promise<IpcResponse<SavedQuery[]>> => ipcRenderer.invoke('saved-queries:list'),
+    add: (query: SavedQuery): Promise<IpcResponse<SavedQuery>> =>
+      ipcRenderer.invoke('saved-queries:add', query),
+    update: (id: string, updates: Partial<SavedQuery>): Promise<IpcResponse<SavedQuery>> =>
+      ipcRenderer.invoke('saved-queries:update', { id, updates }),
+    delete: (id: string): Promise<IpcResponse<void>> => ipcRenderer.invoke('saved-queries:delete', id),
+    incrementUsage: (id: string): Promise<IpcResponse<SavedQuery>> =>
+      ipcRenderer.invoke('saved-queries:increment-usage', id),
+    onOpenDialog: (callback: () => void): (() => void) => {
+      const handler = (): void => callback()
+      ipcRenderer.on('open-saved-queries', handler)
+      return () => ipcRenderer.removeListener('open-saved-queries', handler)
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import {
   Play,
   Download,
@@ -8,7 +9,8 @@ import {
   Loader2,
   AlertCircle,
   Database,
-  Wand2
+  Wand2,
+  Bookmark
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,6 +23,7 @@ import { useQueryStore, useConnectionStore } from '@/stores'
 import { DataTable } from '@/components/data-table'
 import { SQLEditor } from '@/components/sql-editor'
 import { formatSQL } from '@/lib/sql-formatter'
+import { SaveQueryDialog } from '@/components/save-query-dialog'
 
 export function QueryEditor() {
   const activeConnection = useConnectionStore((s) => s.getActiveConnection())
@@ -28,6 +31,8 @@ export function QueryEditor() {
   const { currentQuery, isExecuting, result, error } = useQueryStore()
   const setCurrentQuery = useQueryStore((s) => s.setCurrentQuery)
   const executeQuery = useQueryStore((s) => s.executeQuery)
+
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false)
 
   const handleRunQuery = () => {
     console.log('[QueryEditor] handleRunQuery called')
@@ -112,6 +117,16 @@ export function QueryEditor() {
               Format
               <kbd className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">⌘⇧F</kbd>
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 h-7"
+              disabled={!currentQuery.trim()}
+              onClick={() => setSaveDialogOpen(true)}
+            >
+              <Bookmark className="size-3.5" />
+              Save
+            </Button>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
@@ -187,6 +202,12 @@ export function QueryEditor() {
           </div>
         )}
       </div>
+
+      <SaveQueryDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        query={currentQuery}
+      />
     </div>
   )
 }

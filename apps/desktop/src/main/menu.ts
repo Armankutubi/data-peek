@@ -93,7 +93,18 @@ export function createMenu(): void {
         { role: 'zoomIn' },
         { role: 'zoomOut' },
         { type: 'separator' },
-        { role: 'togglefullscreen' }
+        { role: 'togglefullscreen' },
+        { type: 'separator' },
+        {
+          label: 'Saved Queries',
+          accelerator: 'CmdOrCtrl+B',
+          click: (): void => {
+            const focusedWindow = BrowserWindow.getFocusedWindow()
+            if (focusedWindow) {
+              focusedWindow.webContents.send('open-saved-queries')
+            }
+          }
+        }
       ]
     },
 

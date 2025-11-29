@@ -13,7 +13,8 @@ import {
   PanelTopClose,
   PanelTop,
   DatabaseZap,
-  BarChart3
+  BarChart3,
+  Bookmark
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -44,6 +45,7 @@ import { FKPanelStack, type FKPanelItem } from '@/components/fk-panel-stack'
 import { ERDVisualization } from '@/components/erd-visualization'
 import { ExecutionPlanViewer } from '@/components/execution-plan-viewer'
 import { TableDesigner } from '@/components/table-designer'
+import { SaveQueryDialog } from '@/components/save-query-dialog'
 
 interface TabQueryEditorProps {
   tabId: string
@@ -85,6 +87,9 @@ export function TabQueryEditor({ tabId }: TabQueryEditorProps) {
     durationMs: number
   } | null>(null)
   const [isExplaining, setIsExplaining] = useState(false)
+
+  // Save query dialog state
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false)
 
   // Get the createForeignKeyTab action
   const createForeignKeyTab = useTabStore((s) => s.createForeignKeyTab)
@@ -594,19 +599,31 @@ export function TabQueryEditor({ tabId }: TabQueryEditorProps) {
               </Tooltip>
             </TooltipProvider>
             {!isEditorCollapsed && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-1.5 h-7"
-                disabled={!tab.query.trim()}
-                onClick={handleFormatQuery}
-              >
-                <Wand2 className="size-3.5" />
-                Format
-                <kbd className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">
-                  ⌘⇧F
-                </kbd>
-              </Button>
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 h-7"
+                  disabled={!tab.query.trim()}
+                  onClick={handleFormatQuery}
+                >
+                  <Wand2 className="size-3.5" />
+                  Format
+                  <kbd className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">
+                    ⌘⇧F
+                  </kbd>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 h-7"
+                  disabled={!tab.query.trim()}
+                  onClick={() => setSaveDialogOpen(true)}
+                >
+                  <Bookmark className="size-3.5" />
+                  Save
+                </Button>
+              </>
             )}
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -768,6 +785,13 @@ export function TabQueryEditor({ tabId }: TabQueryEditorProps) {
           />
         </div>
       )}
+
+      {/* Save Query Dialog */}
+      <SaveQueryDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        query={tab.query}
+      />
     </div>
   )
 }

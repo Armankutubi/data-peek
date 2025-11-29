@@ -624,3 +624,35 @@ export interface LicenseDeactivationResponse {
   success: boolean;
   error?: string;
 }
+
+// ============================================
+// Saved Queries Types
+// ============================================
+
+/**
+ * A saved query/snippet that can be bookmarked and reused
+ */
+export interface SavedQuery {
+  /** Unique identifier */
+  id: string;
+  /** Display name for the query */
+  name: string;
+  /** The SQL query text */
+  query: string;
+  /** Optional description of what the query does */
+  description?: string;
+  /** Optional connection ID - if set, opens in this connection by default */
+  connectionId?: string;
+  /** Tags for organization and filtering */
+  tags: string[];
+  /** Folder path for grouping (e.g., "Reports/Monthly") */
+  folder?: string;
+  /** Number of times this query has been used */
+  usageCount: number;
+  /** Last time the query was used (Unix timestamp) */
+  lastUsedAt?: number;
+  /** When the query was created (Unix timestamp) */
+  createdAt: number;
+  /** When the query was last updated (Unix timestamp) */
+  updatedAt: number;
+}
