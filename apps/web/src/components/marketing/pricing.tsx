@@ -1,23 +1,22 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check, X, Sparkles, ArrowRight } from 'lucide-react'
+import { Check, Heart, Github, ArrowRight, Sparkles } from 'lucide-react'
 
 const plans = [
   {
-    name: 'Free',
+    name: 'Personal',
     price: '$0',
     period: 'forever',
-    description: 'Perfect for trying out data-peek',
+    description: 'All features, personal use only',
     features: [
-      { text: '2 database connections', included: true },
-      { text: '50 query history items', included: true },
-      { text: '3 editor tabs', included: true },
-      { text: '1 schema for ER diagrams', included: true },
-      { text: 'CSV/JSON export', included: true },
-      { text: 'Inline data editing', included: false },
-      { text: 'Query execution plans', included: false },
-      { text: 'Updates', included: false },
+      { text: 'All features unlocked', included: true },
+      { text: 'Unlimited connections', included: true },
+      { text: 'Unlimited query history', included: true },
+      { text: 'All future updates', included: true },
+      { text: 'Personal projects & learning', included: true },
+      { text: 'Open source contributors', included: true },
+      { text: 'Students & educators', included: true },
     ],
     cta: 'Download Free',
     href: '/download',
@@ -27,19 +26,17 @@ const plans = [
     name: 'Pro',
     price: '$29',
     originalPrice: '$99',
-    period: 'one-time',
-    description: 'For developers who need the full power',
+    period: 'year',
+    description: 'For commercial use at work',
     badge: 'Early Bird — 70% off',
     features: [
-      { text: 'Unlimited connections', included: true },
-      { text: 'Unlimited query history', included: true },
-      { text: 'Unlimited tabs', included: true },
-      { text: 'Unlimited ER diagrams', included: true },
-      { text: 'CSV/JSON export', included: true },
-      { text: 'Inline data editing', included: true },
-      { text: 'Query execution plans', included: true },
-      { text: '1 year of updates', included: true },
+      { text: 'Everything in Personal', included: true },
+      { text: 'Commercial use allowed', included: true },
+      { text: 'Use at work & for clients', included: true },
+      { text: '1 year of updates included', included: true },
       { text: '3 device activations', included: true },
+      { text: 'Perpetual fallback license', included: true },
+      { text: '30-day money-back guarantee', included: true },
     ],
     cta: 'Get Pro License',
     href: '#buy',
@@ -66,15 +63,16 @@ export function Pricing() {
             className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Pay once.
+            Open source.
             <br />
-            <span className="text-[--color-text-secondary]">Own forever.</span>
+            <span className="text-[--color-text-secondary]">Pay for commercial use.</span>
           </h2>
           <p
             className="text-lg text-[--color-text-secondary] max-w-xl mx-auto"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            No subscriptions, no recurring fees. One purchase, lifetime access.
+            Free for personal use. A license supports development and is required
+            for commercial use in for-profit organizations.
           </p>
         </div>
 
@@ -92,7 +90,7 @@ export function Pricing() {
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge variant="default" size="md">
+                  <Badge variant="default" size="md" className="whitespace-nowrap">
                     <Sparkles className="w-3 h-3 mr-1" />
                     {plan.badge}
                   </Badge>
@@ -128,22 +126,10 @@ export function Pricing() {
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature) => (
                   <li key={feature.text} className="flex items-center gap-3">
-                    {feature.included ? (
-                      <div className="w-5 h-5 rounded-full bg-[--color-success]/10 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-[--color-success]" />
-                      </div>
-                    ) : (
-                      <div className="w-5 h-5 rounded-full bg-[--color-text-muted]/10 flex items-center justify-center flex-shrink-0">
-                        <X className="w-3 h-3 text-[--color-text-muted]" />
-                      </div>
-                    )}
-                    <span
-                      className={`text-sm ${
-                        feature.included
-                          ? 'text-[--color-text-primary]'
-                          : 'text-[--color-text-muted]'
-                      }`}
-                    >
+                    <div className="w-5 h-5 rounded-full bg-[--color-success]/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-[--color-success]" />
+                    </div>
+                    <span className="text-sm text-[--color-text-primary]">
                       {feature.text}
                     </span>
                   </li>
@@ -166,19 +152,68 @@ export function Pricing() {
           ))}
         </div>
 
-        {/* Cloud Teaser */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[--color-surface] border border-[--color-border]">
-            <span
-              className="text-sm text-[--color-text-muted]"
-              style={{ fontFamily: 'var(--font-mono)' }}
-            >
-              Coming soon:
-            </span>
-            <span className="text-sm text-[--color-text-secondary]">
-              Cloud sync & team features
-            </span>
+        {/* Honor System Notice */}
+        <div className="mt-12 p-6 rounded-xl bg-[--color-surface] border border-[--color-border] max-w-2xl mx-auto">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-lg bg-[--color-accent]/10 flex items-center justify-center flex-shrink-0">
+              <Heart className="w-5 h-5 text-[--color-accent]" />
+            </div>
+            <div>
+              <h4
+                className="text-base font-medium mb-2"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                Honor System Licensing
+              </h4>
+              <p className="text-sm text-[--color-text-secondary] mb-3">
+                Inspired by{' '}
+                <Link
+                  href="https://yaak.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[--color-accent] hover:underline"
+                >
+                  Yaak
+                </Link>{' '}
+                and other sustainable indie software. No DRM, no aggressive enforcement.
+                We trust you to do the right thing.
+              </p>
+              <p className="text-sm text-[--color-text-secondary]">
+                <strong>Students:</strong> Use it free! Just reach out for a free license.
+              </p>
+              <p className="text-sm text-[--color-text-muted] mt-2">
+                Questions?{' '}
+                <Link
+                  href="https://x.com/gillarohith"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[--color-accent] hover:underline"
+                >
+                  @gillarohith
+                </Link>{' '}
+                or{' '}
+                <Link
+                  href="mailto:gillarohith1@gmail.com"
+                  className="text-[--color-accent] hover:underline"
+                >
+                  gillarohith1@gmail.com
+                </Link>
+              </p>
+            </div>
           </div>
+        </div>
+
+        {/* Open Source Notice */}
+        <div className="mt-6 text-center">
+          <Link
+            href="https://github.com/Rohithgilla12/data-peek"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[--color-surface] border border-[--color-border] text-sm text-[--color-text-secondary] hover:text-[--color-text-primary] hover:border-[--color-text-muted] transition-colors"
+          >
+            <Github className="w-4 h-4" />
+            <span>View source on GitHub — MIT Licensed</span>
+          </Link>
         </div>
       </div>
     </section>

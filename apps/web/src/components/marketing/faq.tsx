@@ -7,42 +7,52 @@ const faqs = [
   {
     question: 'Is data-peek really free?',
     answer:
-      'Yes! The free tier is fully functional with 2 connections, 50 query history items, and 3 tabs. No credit card required, no time limits. The Pro license unlocks unlimited everything plus advanced features like inline editing and query plans.',
+      'Yes! data-peek is free for personal use with all features unlocked. No credit card required, no time limits, no feature restrictions. A license is only required if you use it for commercial purposes at a for-profit company with 2+ people.',
   },
   {
-    question: 'What does "pay once, own forever" mean?',
+    question: 'What counts as commercial use?',
     answer:
-      'Unlike subscription software, you pay $29 once and get a perpetual license. The license includes 1 year of updates. After that year, you can keep using the version you have forever, or renew for another year of updates at a discounted rate.',
+      'Commercial use means using data-peek for work-related activities in a for-profit organization of 2+ people. This includes developers at startups/companies, freelancers billing clients, and agencies doing client work. Solo founders (company of one) are free!',
   },
   {
-    question: 'How many devices can I use with one license?',
+    question: 'Is data-peek open source?',
     answer:
-      'One Pro license includes 3 device activations. You can use data-peek on your work laptop, home computer, and one more device. Need more? Contact us for volume licensing.',
+      'Yes! The source code is MIT licensed on GitHub. You can view, modify, fork, and build it yourself for any purpose. Pre-built binaries require a license for commercial use — this is how we sustain development.',
   },
   {
-    question: 'Does data-peek work offline?',
+    question: 'What does "perpetual fallback" mean?',
     answer:
-      "Absolutely. data-peek runs entirely on your machine. We validate licenses online during activation, but after that, you can work offline. There's a grace period for license revalidation.",
+      'When you buy a Pro license ($29/year), you get 1 year of updates. If you don\'t renew, you keep your current version forever — it doesn\'t stop working. You just won\'t receive future updates. Renew anytime to get the latest.',
   },
   {
-    question: 'What databases are supported?',
+    question: "I'm a student. Can I use it for free?",
     answer:
-      "Currently, data-peek is PostgreSQL-only. We're laser-focused on making the best Postgres experience possible. MySQL and SQLite support are planned for future releases.",
+      'Absolutely! Students and educators can use data-peek for free, even for school projects. Just reach out on X (@gillarohith) or email gillarohith1@gmail.com and we\'ll hook you up with a free license. Learning should never have barriers.',
+  },
+  {
+    question: 'How does the honor system work?',
+    answer:
+      'We trust you. There\'s no DRM, no aggressive license checks, no "you\'ve been logged out" surprises. If you\'re using it commercially, we ask that you pay for a license. Inspired by Yaak and other sustainable indie software.',
+  },
+  {
+    question: 'How many devices can I use?',
+    answer:
+      'Each license includes 3 device activations. Use it on your work laptop, home computer, and one more device. Need more? Just reach out.',
   },
   {
     question: 'Is my data safe?',
     answer:
-      'Yes. data-peek never sends your data anywhere. All queries run directly from your machine to your database. Connection credentials are encrypted locally. We have no telemetry, no analytics, no tracking.',
+      'Yes. data-peek runs entirely on your machine. All queries go directly to your database — we never see your data. Connection credentials are encrypted locally. No telemetry, no analytics, no tracking.',
+  },
+  {
+    question: 'What databases are supported?',
+    answer:
+      'Currently PostgreSQL and MySQL. We\'re laser-focused on making the best database experience possible. SQLite and more databases are planned for future releases.',
   },
   {
     question: 'Can I get a refund?',
     answer:
-      "Yes, we offer a 14-day money-back guarantee. If data-peek isn't right for you, just email us and we'll refund your purchase, no questions asked.",
-  },
-  {
-    question: 'Do you offer team or enterprise licenses?',
-    answer:
-      "Not yet, but we're working on it! Cloud sync and team features are coming soon. Sign up for our newsletter to be notified when they launch.",
+      'Yes, 30-day money-back guarantee, no questions asked. If data-peek isn\'t right for you, just email us.',
   },
 ]
 

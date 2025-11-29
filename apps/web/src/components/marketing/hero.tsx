@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowRight, Sparkles, Zap, Download } from 'lucide-react'
+import { ArrowRight, Github, Zap, Download, Sparkles } from 'lucide-react'
 
 export function Hero() {
   return (
@@ -28,11 +28,15 @@ export function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20">
         <div className="flex flex-col items-center text-center">
-          {/* Early Bird Badge */}
-          <div className="animate-fade-in-up">
-            <Badge variant="default" size="lg" className="mb-8">
+          {/* Early Bird + Open Source Badge */}
+          <div className="animate-fade-in-up flex flex-wrap items-center justify-center gap-3 mb-8">
+            <Badge variant="default" size="lg">
               <Sparkles className="w-3.5 h-3.5 mr-1.5" />
               Early Bird — 70% off
+            </Badge>
+            <Badge variant="secondary" size="lg">
+              <Github className="w-3.5 h-3.5 mr-1.5" />
+              Open Source
             </Badge>
           </div>
 
@@ -52,7 +56,7 @@ export function Hero() {
             style={{ fontFamily: 'var(--font-body)' }}
           >
             A lightning-fast PostgreSQL client for developers who value simplicity.
-            No bloat, no subscriptions, no BS.
+            Open source, free for personal use.
           </p>
 
           {/* Terminal-style feature highlight */}
@@ -70,7 +74,7 @@ export function Hero() {
             </span>
             <span className="w-px h-4 bg-[--color-border]" />
             <span className="flex items-center gap-2 text-sm">
-              <span className="text-[--color-text-muted]">pay once, own forever</span>
+              <span className="text-[--color-text-muted]">all features free</span>
             </span>
           </div>
 

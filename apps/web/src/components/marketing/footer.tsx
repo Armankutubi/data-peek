@@ -57,7 +57,7 @@ export function Footer() {
                 <Github className="w-4 h-4" />
               </Link>
               <Link
-                href="https://twitter.com/datapeekapp"
+                href="https://x.com/gillarohith"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-[--color-surface] border border-[--color-border] flex items-center justify-center text-[--color-text-muted] hover:text-[--color-text-primary] hover:border-[--color-text-muted] transition-colors"
