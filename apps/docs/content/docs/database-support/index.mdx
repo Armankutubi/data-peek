@@ -1,0 +1,45 @@
+---
+title: Database Support
+description: Supported databases and their features
+---
+
+# Database Support
+
+data-peek currently supports PostgreSQL and MySQL, with SQLite coming soon.
+
+## Supported Databases
+
+| Database | Status | Features |
+|----------|--------|----------|
+| PostgreSQL | ✓ Full Support | All features |
+| MySQL | ✓ Supported | Core features |
+| SQLite | Coming Soon | - |
+
+<Cards>
+  <Card title="PostgreSQL" href="/docs/database-support/postgresql" description="Full-featured PostgreSQL support" />
+  <Card title="MySQL" href="/docs/database-support/mysql" description="MySQL database support" />
+</Cards>
+
+## Feature Comparison
+
+| Feature | PostgreSQL | MySQL |
+|---------|:----------:|:-----:|
+| Query execution | ✓ | ✓ |
+| Schema explorer | ✓ | ✓ |
+| Table preview | ✓ | ✓ |
+| Inline editing | ✓ | ✓ |
+| Table designer | ✓ | ✓ |
+| ER diagrams | ✓ | ✓ |
+| Query plans (EXPLAIN) | ✓ | ✓ |
+| EXPLAIN ANALYZE | ✓ | - |
+| Sequences | ✓ | - |
+| Custom types (enums) | ✓ | ✓ |
+| JSON support | ✓ | ✓ |
+| Array types | ✓ | - |
+
+## Connection Security
+
+Both databases support:
+- SSL/TLS connections
+- Password authentication
+- Encrypted credential storage

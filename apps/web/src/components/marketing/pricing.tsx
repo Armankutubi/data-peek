@@ -46,21 +46,21 @@ const plans = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="relative py-32 overflow-hidden">
+    <section id="pricing" className="relative py-20 sm:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[--color-surface]/50 to-transparent" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <p
-            className="text-xs uppercase tracking-[0.2em] text-[--color-accent] mb-4"
+            className="text-xs uppercase tracking-[0.2em] text-[--color-accent] mb-3 sm:mb-4"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             Pricing
           </p>
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4 sm:mb-6 px-2"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             Open source.
@@ -68,7 +68,7 @@ export function Pricing() {
             <span className="text-[--color-text-secondary]">Pay for commercial use.</span>
           </h2>
           <p
-            className="text-lg text-[--color-text-secondary] max-w-xl mx-auto"
+            className="text-base sm:text-lg text-[--color-text-secondary] max-w-xl mx-auto px-2"
             style={{ fontFamily: 'var(--font-body)' }}
           >
             Free for personal use. A license supports development and is required
@@ -77,11 +77,11 @@ export function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-2xl p-8 ${
+              className={`relative rounded-xl sm:rounded-2xl p-5 sm:p-8 ${
                 plan.highlighted
                   ? 'bg-gradient-to-b from-[--color-accent]/10 to-[--color-surface] border-2 border-[--color-accent]/50'
                   : 'bg-[--color-surface] border border-[--color-border]'
@@ -90,7 +90,7 @@ export function Pricing() {
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge variant="default" size="md" className="whitespace-nowrap">
+                  <Badge variant="default" size="md" className="whitespace-nowrap text-xs sm:text-sm">
                     <Sparkles className="w-3 h-3 mr-1" />
                     {plan.badge}
                   </Badge>
@@ -98,38 +98,38 @@ export function Pricing() {
               )}
 
               {/* Plan Header */}
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8">
                 <h3
-                  className="text-xl font-medium mb-2"
+                  className="text-lg sm:text-xl font-medium mb-2"
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
                   {plan.name}
                 </h3>
                 <div className="flex items-baseline gap-2 mb-2">
                   <span
-                    className="text-5xl font-semibold"
+                    className="text-4xl sm:text-5xl font-semibold"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
                     {plan.price}
                   </span>
                   {plan.originalPrice && (
-                    <span className="text-xl text-[--color-text-muted] line-through">
+                    <span className="text-lg sm:text-xl text-[--color-text-muted] line-through">
                       {plan.originalPrice}
                     </span>
                   )}
-                  <span className="text-[--color-text-muted]">/{plan.period}</span>
+                  <span className="text-sm sm:text-base text-[--color-text-muted]">/{plan.period}</span>
                 </div>
-                <p className="text-sm text-[--color-text-secondary]">{plan.description}</p>
+                <p className="text-xs sm:text-sm text-[--color-text-secondary]">{plan.description}</p>
               </div>
 
               {/* Features */}
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8">
                 {plan.features.map((feature) => (
-                  <li key={feature.text} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[--color-success]/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-3 h-3 text-[--color-success]" />
+                  <li key={feature.text} className="flex items-center gap-2.5 sm:gap-3">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[--color-success]/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[--color-success]" />
                     </div>
-                    <span className="text-sm text-[--color-text-primary]">
+                    <span className="text-xs sm:text-sm text-[--color-text-primary]">
                       {feature.text}
                     </span>
                   </li>
@@ -140,7 +140,7 @@ export function Pricing() {
               <Button
                 variant={plan.highlighted ? 'primary' : 'secondary'}
                 size="lg"
-                className="w-full"
+                className="w-full text-sm sm:text-base"
                 asChild
               >
                 <Link href={plan.href}>
@@ -153,19 +153,19 @@ export function Pricing() {
         </div>
 
         {/* Honor System Notice */}
-        <div className="mt-12 p-6 rounded-xl bg-[--color-surface] border border-[--color-border] max-w-2xl mx-auto">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-[--color-accent]/10 flex items-center justify-center flex-shrink-0">
-              <Heart className="w-5 h-5 text-[--color-accent]" />
+        <div className="mt-8 sm:mt-12 p-4 sm:p-6 rounded-lg sm:rounded-xl bg-[--color-surface] border border-[--color-border] max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[--color-accent]/10 flex items-center justify-center flex-shrink-0">
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-[--color-accent]" />
             </div>
             <div>
               <h4
-                className="text-base font-medium mb-2"
+                className="text-sm sm:text-base font-medium mb-2"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 Honor System Licensing
               </h4>
-              <p className="text-sm text-[--color-text-secondary] mb-3">
+              <p className="text-xs sm:text-sm text-[--color-text-secondary] mb-2 sm:mb-3">
                 Inspired by{' '}
                 <Link
                   href="https://yaak.app"
@@ -178,10 +178,10 @@ export function Pricing() {
                 and other sustainable indie software. No DRM, no aggressive enforcement.
                 We trust you to do the right thing.
               </p>
-              <p className="text-sm text-[--color-text-secondary]">
+              <p className="text-xs sm:text-sm text-[--color-text-secondary]">
                 <strong>Students:</strong> Use it free! Just reach out for a free license.
               </p>
-              <p className="text-sm text-[--color-text-muted] mt-2">
+              <p className="text-xs sm:text-sm text-[--color-text-muted] mt-2">
                 Questions?{' '}
                 <Link
                   href="https://x.com/gillarohith"
@@ -204,12 +204,12 @@ export function Pricing() {
         </div>
 
         {/* Open Source Notice */}
-        <div className="mt-6 text-center">
+        <div className="mt-5 sm:mt-6 text-center">
           <Link
             href="https://github.com/Rohithgilla12/data-peek"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[--color-surface] border border-[--color-border] text-sm text-[--color-text-secondary] hover:text-[--color-text-primary] hover:border-[--color-text-muted] transition-colors"
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[--color-surface] border border-[--color-border] text-xs sm:text-sm text-[--color-text-secondary] hover:text-[--color-text-primary] hover:border-[--color-text-muted] transition-colors"
           >
             <Github className="w-4 h-4" />
             <span>View source on GitHub — MIT Licensed</span>

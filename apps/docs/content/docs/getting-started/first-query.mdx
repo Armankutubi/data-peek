@@ -1,0 +1,120 @@
+---
+title: First Query
+description: Run your first SQL query in data-peek
+---
+
+# First Query
+
+Now that you're connected to a database, let's run your first query!
+
+## Running a Query
+
+1. **Open a new tab** by clicking the **+** button in the tab bar or pressing `Cmd+T` (macOS) or `Ctrl+T` (Windows/Linux)
+
+2. **Type your query** in the editor:
+   ```sql
+   SELECT * FROM users LIMIT 10;
+   ```
+
+3. **Execute the query** by pressing `Cmd+Enter` (macOS) or `Ctrl+Enter` (Windows/Linux)
+
+4. **View the results** in the table below the editor
+
+<Callout type="tip">
+  The results show the first 100 rows by default. Use the pagination controls at the bottom to navigate through larger result sets.
+</Callout>
+
+## Quick Table Preview
+
+Instead of writing a query, you can quickly preview any table:
+
+1. **Expand your connection** in the sidebar to see schemas and tables
+2. **Click on a table name** to open a preview tab
+3. data-peek automatically runs `SELECT * FROM table LIMIT 100`
+
+## Understanding the Results
+
+### Results Toolbar
+
+| Feature | Description |
+|---------|-------------|
+| **Row count** | Shows number of rows returned |
+| **Duration** | Query execution time in milliseconds |
+| **Export** | Download results as CSV or JSON |
+| **Edit** | Enable inline data editing |
+
+### Data Type Indicators
+
+Columns show colored badges indicating their data type:
+
+| Color | Types |
+|-------|-------|
+| 🟣 Purple | UUID |
+| 🟢 Green | Text, VARCHAR |
+| 🔵 Blue | Integer, Numeric |
+| 🟠 Orange | Date, Timestamp |
+| 🟡 Yellow | Boolean |
+
+### NULL Values
+
+NULL values are displayed with a distinctive `NULL` badge to clearly distinguish them from empty strings.
+
+## Working with Results
+
+### Copy Cell Value
+
+Click any cell to copy its value to the clipboard.
+
+### Copy Row as JSON
+
+Right-click a row and select **Copy as JSON** to get the entire row as a JSON object.
+
+### Navigate Foreign Keys
+
+If a column is a foreign key, you can `Cmd+Click` (macOS) or `Ctrl+Click` (Windows/Linux) to open the referenced record in a new tab.
+
+## Query Editor Features
+
+### Syntax Highlighting
+
+The Monaco-powered editor provides full SQL syntax highlighting and IntelliSense.
+
+### Format SQL
+
+Press `Cmd+Shift+F` (macOS) or `Ctrl+Shift+F` (Windows/Linux) to auto-format your SQL query.
+
+### Multiple Tabs
+
+Open multiple query tabs to work on different queries simultaneously. Each tab maintains its own:
+- Query text
+- Results
+- Pagination state
+- Execution history
+
+## Query History
+
+Every query you run is automatically saved to history. Access it from the sidebar to:
+
+- Re-run previous queries
+- See execution times and row counts
+- Delete old queries
+- Search through your history
+
+## Saving Queries
+
+Bookmark frequently used queries:
+
+1. Write your query
+2. Press `Cmd+Shift+S` (macOS) or `Ctrl+Shift+S` (Windows/Linux)
+3. Give it a name, description, and optional tags
+4. Access saved queries from the sidebar
+
+## Next Steps
+
+Now that you know the basics, explore more features:
+
+<Cards>
+  <Card title="Query Editor" href="/docs/features/query-editor" description="Advanced editor features" />
+  <Card title="Schema Explorer" href="/docs/features/schema-explorer" description="Navigate your database structure" />
+  <Card title="Inline Editing" href="/docs/features/inline-editing" description="Edit data directly in the results" />
+</Cards>

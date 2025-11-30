@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Database, Menu, X } from 'lucide-react'
+import { Database, Menu, X, Github, Star } from 'lucide-react'
 
 const navLinks = [
   { href: '#features', label: 'Features' },
@@ -65,6 +65,17 @@ export function Header() {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="https://github.com/Rohithgilla12/data-peek"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-surface] transition-colors"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              <Github className="w-4 h-4" />
+              <Star className="w-3 h-3" />
+              <span className="hidden lg:inline">Star</span>
+            </Link>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/download">Download</Link>
             </Button>
@@ -96,6 +107,17 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="https://github.com/Rohithgilla12/data-peek"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-[--color-text-secondary] hover:text-[--color-text-primary] transition-colors py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Github className="w-4 h-4" />
+                <Star className="w-3 h-3" />
+                Star on GitHub
+              </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-[--color-border]">
                 <Button variant="secondary" size="sm" asChild>
                   <Link href="/download">Download</Link>

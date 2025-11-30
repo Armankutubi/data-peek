@@ -60,21 +60,21 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="relative py-32 overflow-hidden">
+    <section id="faq" className="relative py-20 sm:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[--color-surface]/30 to-transparent" />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6">
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <p
-            className="text-xs uppercase tracking-[0.2em] text-[--color-accent] mb-4"
+            className="text-xs uppercase tracking-[0.2em] text-[--color-accent] mb-3 sm:mb-4"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             FAQ
           </p>
           <h2
-            className="text-4xl md:text-5xl font-semibold tracking-tight mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-4 sm:mb-6"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             Questions? Answers.
@@ -82,24 +82,24 @@ export function FAQ() {
         </div>
 
         {/* FAQ List */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="rounded-xl border border-[--color-border] overflow-hidden bg-[--color-surface]/50"
+              className="rounded-lg sm:rounded-xl border border-[--color-border] overflow-hidden bg-[--color-surface]/50"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-5 text-left hover:bg-[--color-surface] transition-colors"
+                className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-[--color-surface] transition-colors"
               >
                 <span
-                  className="text-base font-medium pr-4"
+                  className="text-sm sm:text-base font-medium pr-3 sm:pr-4"
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`w-5 h-5 text-[--color-text-muted] flex-shrink-0 transition-transform duration-200 ${
+                  className={`w-4 h-4 sm:w-5 sm:h-5 text-[--color-text-muted] flex-shrink-0 transition-transform duration-200 ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 />
@@ -110,7 +110,7 @@ export function FAQ() {
                 }`}
               >
                 <p
-                  className="px-5 pb-5 text-[--color-text-secondary] leading-relaxed"
+                  className="px-4 sm:px-5 pb-4 sm:pb-5 text-xs sm:text-sm text-[--color-text-secondary] leading-relaxed"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
                   {faq.answer}

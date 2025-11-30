@@ -1,0 +1,15 @@
+{
+  "title": "Features",
+  "pages": [
+    "index",
+    "query-editor",
+    "schema-explorer",
+    "results-viewer",
+    "inline-editing",
+    "table-designer",
+    "erd-diagrams",
+    "query-plans",
+    "saved-queries",
+    "export"
+  ]
+}

@@ -1,0 +1,134 @@
+---
+title: Schema Explorer
+description: Navigate your database structure with the schema explorer
+---
+
+# Schema Explorer
+
+The Schema Explorer in the sidebar provides a hierarchical view of your database structure.
+
+## Navigation
+
+### Hierarchy
+
+```
+📁 Connection Name
+  └── 📁 Schema (e.g., public)
+      └── 📄 Table/View
+          └── 📊 Column
+```
+
+### Expanding Items
+
+- Click the arrow to expand/collapse
+- Click a schema to expand and see its tables
+- Click a table to expand and see its columns
+
+### Search/Filter
+
+Use the search box at the top to filter:
+- Type a table name to find it quickly
+- Matches are highlighted
+- Filter works across all schemas
+
+## Table Actions
+
+Right-click any table to see available actions:
+
+| Action | Description |
+|--------|-------------|
+| **Preview Data** | Open a tab with `SELECT * LIMIT 100` |
+| **Edit Data** | Open a tab and enable edit mode |
+| **View ERD** | Open the ER diagram tab |
+| **Design Table** | Open the table designer to edit structure |
+| **Copy Name** | Copy the fully-qualified table name |
+| **Drop Table** | Delete the table (with confirmation) |
+
+<Callout type="warning">
+  The **Drop Table** action is destructive and cannot be undone. Use with caution.
+</Callout>
+
+## Column Information
+
+Expanding a table shows all columns with:
+
+### Visual Indicators
+
+| Icon/Badge | Meaning |
+|------------|---------|
+| 🔑 Key icon | Primary key column |
+| 🔗 Link icon | Foreign key column |
+| Data type badge | Column data type |
+
+### Data Type Colors
+
+| Color | Types |
+|-------|-------|
+| 🟣 Purple | UUID |
+| 🟢 Green | text, varchar, char |
+| 🔵 Blue | integer, bigint, numeric, serial |
+| 🟠 Orange | timestamp, date, time |
+| 🟡 Yellow | boolean |
+| ⚪ Gray | Other types |
+
+### Nullable Indicator
+
+- Columns that allow NULL show a lighter color
+- NOT NULL columns appear bolder
+
+### Foreign Key Details
+
+Hovering over a foreign key column shows:
+- Referenced table
+- Referenced column
+- Relationship type
+
+## Schema Actions
+
+Right-click a schema to:
+
+| Action | Description |
+|--------|-------------|
+| **New Table** | Open table designer to create a new table |
+| **View ERD** | Open ER diagram for this schema |
+| **Refresh** | Reload schema information |
+
+## Refreshing Schema
+
+When you make changes to your database structure (outside or inside data-peek):
+
+1. Click the **Refresh** button at the top of the explorer
+2. Or right-click the connection and select **Refresh Schema**
+
+<Callout type="info">
+  Schema information is cached for performance. Always refresh after making DDL changes.
+</Callout>
+
+## Custom Types
+
+If your database has custom types (enums, composites), they appear under the schema:
+
+```
+📁 public
+  └── 📦 Types
+      └── order_status (enum)
+          ├── pending
+          ├── processing
+          └── completed
+```
+
+Enum values are used for dropdown selectors when editing data.
+
+## Tips
+
+### Quick Navigation
+
+- Use keyboard to navigate: Arrow keys to move, Enter to expand
+- Press `/` to focus the search box
+- Type to filter, then press Enter to select first match
+
+### Working with Many Tables
+
+- Collapse schemas you're not using
+- Use search to find specific tables
+- Pin frequently-used tabs to keep them open

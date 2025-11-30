@@ -3,7 +3,7 @@ dist/
 out/
 
 # Business documentation (contains sensitive info)
-docs/
+/docs/
 
 # OS files
 .DS_Store

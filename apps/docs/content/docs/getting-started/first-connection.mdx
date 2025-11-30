@@ -1,0 +1,91 @@
+---
+title: First Connection
+description: Connect to your first database in data-peek
+---
+
+# First Connection
+
+Let's connect data-peek to your database. This guide uses PostgreSQL, but the process is similar for MySQL.
+
+## Adding a Connection
+
+1. Click the **+** button in the sidebar under "Connections"
+2. Fill in your connection details:
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| **Name** | A friendly name for this connection | `Local Dev` |
+| **Host** | Database server hostname or IP | `localhost` |
+| **Port** | Database port | `5432` (PostgreSQL) or `3306` (MySQL) |
+| **Database** | Database name | `myapp_development` |
+| **User** | Database username | `postgres` |
+| **Password** | Database password | `••••••••` |
+
+3. Click **Test Connection** to verify your settings
+4. Click **Save** to add the connection
+
+<Callout type="tip">
+  You can also paste a connection string directly. data-peek will auto-fill all fields from URLs like:
+  ```
+  postgresql://user:password@localhost:5432/database
+  ```
+</Callout>
+
+## Connection String Format
+
+### PostgreSQL
+
+```
+postgresql://[user]:[password]@[host]:[port]/[database]?sslmode=[mode]
+```
+
+### MySQL
+
+```
+mysql://[user]:[password]@[host]:[port]/[database]
+```
+
+## SSL/TLS Connections
+
+For secure connections to cloud databases:
+
+1. Check the **SSL** option when adding your connection
+2. For services like Supabase, Railway, or Neon, SSL is usually required
+
+<Callout type="warning">
+  Always use SSL when connecting to production databases over the internet.
+</Callout>
+
+## Managing Connections
+
+### Editing a Connection
+
+1. Right-click the connection in the sidebar
+2. Select **Edit**
+3. Modify the details and save
+
+### Deleting a Connection
+
+1. Right-click the connection in the sidebar
+2. Select **Delete**
+3. Confirm the deletion
+
+### Switching Connections
+
+- Click on any connection in the sidebar to switch to it
+- Use `Cmd+P` (macOS) or `Ctrl+P` (Windows/Linux) to open the connection picker
+- Use `Cmd+Shift+1-9` to quickly switch between connections 1-9
+
+## Connection Status
+
+The connection indicator shows:
+
+| Status | Meaning |
+|--------|---------|
+| 🟢 Green | Connected and ready |
+| 🟡 Yellow | Connecting... |
+| 🔴 Red | Connection error |
+
+## Next Steps
+
+Now that you're connected, let's [run your first query](/docs/getting-started/first-query)!

@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "pnpm --filter @data-peek/desktop dev",
     "dev:web": "pnpm --filter @data-peek/web dev",
+    "dev:docs": "pnpm --filter @data-peek/docs dev",
     "build": "pnpm --filter @data-peek/desktop build",
     "lint": "pnpm -r lint",
     "postinstall": "pnpm --filter @data-peek/desktop exec electron-builder install-app-deps || true",

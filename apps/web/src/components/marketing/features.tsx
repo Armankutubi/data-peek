@@ -90,21 +90,21 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="relative py-32 overflow-hidden">
+    <section id="features" className="relative py-20 sm:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 grid-pattern opacity-50" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 sm:mb-20">
           <p
-            className="text-xs uppercase tracking-[0.2em] text-[--color-accent] mb-4"
+            className="text-xs uppercase tracking-[0.2em] text-[--color-accent] mb-3 sm:mb-4"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             Features
           </p>
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4 sm:mb-6 px-2"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             Everything you need.
@@ -112,7 +112,7 @@ export function Features() {
             <span className="text-[--color-text-secondary]">Nothing you don&apos;t.</span>
           </h2>
           <p
-            className="text-lg text-[--color-text-secondary] max-w-2xl mx-auto"
+            className="text-base sm:text-lg text-[--color-text-secondary] max-w-2xl mx-auto px-2"
             style={{ fontFamily: 'var(--font-body)' }}
           >
             Built for developers who want to query their database, not fight their tools.
@@ -120,38 +120,38 @@ export function Features() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className="group relative p-6 rounded-2xl bg-[--color-surface] border border-[--color-border] hover:border-[--color-border] hover:bg-[--color-surface-elevated] transition-all duration-300 hover:-translate-y-1"
+              className="group relative p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-[--color-surface] border border-[--color-border] hover:border-[--color-border] hover:bg-[--color-surface-elevated] transition-all duration-300 hover:-translate-y-1"
               style={{
                 animationDelay: `${index * 50}ms`,
               }}
             >
               {/* Icon */}
               <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110"
                 style={{
                   backgroundColor: `${feature.color}15`,
                   border: `1px solid ${feature.color}30`,
                 }}
               >
                 <feature.icon
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                   style={{ color: feature.color }}
                 />
               </div>
 
               {/* Content */}
               <h3
-                className="text-lg font-medium mb-2"
+                className="text-base sm:text-lg font-medium mb-1.5 sm:mb-2"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 {feature.title}
               </h3>
               <p
-                className="text-sm text-[--color-text-secondary] leading-relaxed"
+                className="text-xs sm:text-sm text-[--color-text-secondary] leading-relaxed"
                 style={{ fontFamily: 'var(--font-body)' }}
               >
                 {feature.description}
@@ -159,7 +159,7 @@ export function Features() {
 
               {/* Hover Glow */}
               <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+                className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                 style={{
                   background: `radial-gradient(circle at center, ${feature.color}08 0%, transparent 70%)`,
                 }}
@@ -169,42 +169,42 @@ export function Features() {
         </div>
 
         {/* Feature Screenshots */}
-        <div className="mt-24 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="mt-16 sm:mt-24 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {/* Query Editor Screenshot */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-[--color-accent]/10 border border-[--color-accent]/20 flex items-center justify-center">
-                <Code2 className="w-4 h-4 text-[--color-accent]" />
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[--color-accent]/10 border border-[--color-accent]/20 flex items-center justify-center">
+                <Code2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[--color-accent]" />
               </div>
               <h3
-                className="text-lg font-medium"
+                className="text-base sm:text-lg font-medium"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 Query Editor
               </h3>
             </div>
-            <div className="screenshot-placeholder min-h-[300px] rounded-xl">
-              <div className="flex flex-col items-center gap-2 z-10">
+            <div className="screenshot-placeholder min-h-[220px] sm:min-h-[300px] rounded-lg sm:rounded-xl">
+              <div className="flex flex-col items-center gap-2 z-10 text-sm">
                 <span>screenshot_editor.png</span>
               </div>
             </div>
           </div>
 
           {/* ER Diagram Screenshot */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-[#f472b6]/10 border border-[#f472b6]/20 flex items-center justify-center">
-                <GitBranch className="w-4 h-4 text-[#f472b6]" />
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#f472b6]/10 border border-[#f472b6]/20 flex items-center justify-center">
+                <GitBranch className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f472b6]" />
               </div>
               <h3
-                className="text-lg font-medium"
+                className="text-base sm:text-lg font-medium"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 ER Diagrams
               </h3>
             </div>
-            <div className="screenshot-placeholder min-h-[300px] rounded-xl">
-              <div className="flex flex-col items-center gap-2 z-10">
+            <div className="screenshot-placeholder min-h-[220px] sm:min-h-[300px] rounded-lg sm:rounded-xl">
+              <div className="flex flex-col items-center gap-2 z-10 text-sm">
                 <span>screenshot_erd.png</span>
               </div>
             </div>

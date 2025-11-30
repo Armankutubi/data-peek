@@ -1,0 +1,640 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* =============================================================================
+   DATA-PEEK TERMINAL THEME
+   A terminal-inspired documentation theme with electric cyan accents
+   ============================================================================= */
+
+/* Geist Mono Font */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/GeistMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/GeistMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/GeistMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/GeistMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* =============================================================================
+   CSS VARIABLES - Override Fumadocs defaults
+   ============================================================================= */
+
+:root {
+  /* Terminal color palette */
+  --dp-background: #0a0a0b;
+  --dp-surface: #111113;
+  --dp-surface-elevated: #18181b;
+  --dp-border: #27272a;
+  --dp-border-subtle: #1f1f23;
+
+  --dp-text-primary: #fafafa;
+  --dp-text-secondary: #a1a1aa;
+  --dp-text-muted: #71717a;
+
+  /* Electric Cyan Accent */
+  --dp-accent: #22d3ee;
+  --dp-accent-dim: #0891b2;
+  --dp-accent-glow: rgba(34, 211, 238, 0.15);
+  --dp-accent-subtle: rgba(34, 211, 238, 0.08);
+
+  /* Status colors */
+  --dp-success: #4ade80;
+  --dp-warning: #fbbf24;
+  --dp-error: #f87171;
+
+  /* Typography */
+  --dp-font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* Dark theme overrides for Fumadocs */
+.dark, :root {
+  /* Background colors */
+  --background: 6 6 7;
+  --foreground: 250 250 250;
+  --muted: 17 17 19;
+  --muted-foreground: 161 161 170;
+  --popover: 17 17 19;
+  --popover-foreground: 250 250 250;
+  --card: 17 17 19;
+  --card-foreground: 250 250 250;
+  --border: 39 39 42;
+  --input: 39 39 42;
+
+  /* Primary = Electric Cyan */
+  --primary: 34 211 238;
+  --primary-foreground: 6 6 7;
+
+  /* Secondary */
+  --secondary: 24 24 27;
+  --secondary-foreground: 250 250 250;
+
+  /* Accent */
+  --accent: 24 24 27;
+  --accent-foreground: 250 250 250;
+
+  /* States */
+  --destructive: 248 113 113;
+  --destructive-foreground: 6 6 7;
+
+  --ring: 34 211 238;
+
+  /* Radius */
+  --radius: 0.5rem;
+
+  /* Fumadocs specific overrides */
+  --fd-background: var(--dp-background);
+  --fd-foreground: var(--dp-text-primary);
+  --fd-muted: var(--dp-surface);
+  --fd-muted-foreground: var(--dp-text-muted);
+  --fd-card: var(--dp-surface);
+  --fd-card-foreground: var(--dp-text-primary);
+  --fd-border: var(--dp-border);
+  --fd-primary: var(--dp-accent);
+  --fd-primary-foreground: var(--dp-background);
+  --fd-secondary: var(--dp-surface-elevated);
+  --fd-secondary-foreground: var(--dp-text-primary);
+  --fd-accent: var(--dp-surface-elevated);
+  --fd-accent-foreground: var(--dp-text-primary);
+}
+
+/* =============================================================================
+   BASE STYLES
+   ============================================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--dp-font-mono);
+  background: var(--dp-background);
+  color: var(--dp-text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Grid pattern background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(39, 39, 42, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(39, 39, 42, 0.25) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Noise texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* =============================================================================
+   TYPOGRAPHY
+   ============================================================================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--dp-font-mono);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--dp-text-primary);
+}
+
+h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--dp-border-subtle);
+}
+
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin-top: 2rem;
+}
+
+p, li {
+  color: var(--dp-text-secondary);
+}
+
+code {
+  font-family: var(--dp-font-mono);
+  font-size: 0.875em;
+}
+
+/* Inline code */
+:not(pre) > code {
+  background: var(--dp-surface-elevated);
+  border: 1px solid var(--dp-border-subtle);
+  border-radius: 4px;
+  padding: 0.125rem 0.375rem;
+  color: var(--dp-accent);
+  font-weight: 500;
+}
+
+/* =============================================================================
+   LINKS
+   ============================================================================= */
+
+a {
+  color: var(--dp-accent);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: var(--dp-text-primary);
+  text-shadow: 0 0 12px var(--dp-accent-glow);
+}
+
+/* =============================================================================
+   CODE BLOCKS
+   ============================================================================= */
+
+pre {
+  font-family: var(--dp-font-mono) !important;
+  background: var(--dp-surface) !important;
+  border: 1px solid var(--dp-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  overflow-x: auto;
+  position: relative;
+}
+
+pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dp-accent-glow), transparent);
+}
+
+pre code {
+  font-family: var(--dp-font-mono) !important;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: var(--dp-text-secondary);
+}
+
+/* Syntax highlighting adjustments */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--dp-text-muted);
+}
+
+.token.punctuation {
+  color: var(--dp-text-muted);
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: var(--dp-accent);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: var(--dp-success);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.token.variable {
+  color: var(--dp-text-primary);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c084fc;
+}
+
+.token.function,
+.token.class-name {
+  color: var(--dp-warning);
+}
+
+.token.regex,
+.token.important {
+  color: var(--dp-error);
+}
+
+/* =============================================================================
+   FUMADOCS LAYOUT OVERRIDES
+   ============================================================================= */
+
+/* Sidebar */
+[data-sidebar] {
+  background: var(--dp-surface) !important;
+  border-right: 1px solid var(--dp-border) !important;
+}
+
+[data-sidebar] nav a {
+  color: var(--dp-text-secondary);
+  font-family: var(--dp-font-mono);
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+[data-sidebar] nav a:hover {
+  color: var(--dp-text-primary);
+  background: var(--dp-surface-elevated);
+}
+
+[data-sidebar] nav a[data-active='true'] {
+  color: var(--dp-accent);
+  background: var(--dp-accent-subtle);
+  border-left: 2px solid var(--dp-accent);
+}
+
+/* Navbar */
+nav[data-navbar] {
+  background: rgba(10, 10, 11, 0.8) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--dp-border) !important;
+}
+
+/* TOC (Table of Contents) */
+[data-toc] {
+  border-left: 1px solid var(--dp-border);
+}
+
+[data-toc] a {
+  color: var(--dp-text-muted);
+  font-family: var(--dp-font-mono);
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+}
+
+[data-toc] a:hover {
+  color: var(--dp-text-secondary);
+}
+
+[data-toc] a[data-active='true'] {
+  color: var(--dp-accent);
+}
+
+/* Search */
+[data-search-dialog] {
+  background: var(--dp-surface) !important;
+  border: 1px solid var(--dp-border) !important;
+  border-radius: 12px !important;
+}
+
+[data-search-dialog] input {
+  font-family: var(--dp-font-mono);
+  background: var(--dp-background) !important;
+  border: 1px solid var(--dp-border) !important;
+}
+
+/* =============================================================================
+   DOCS PAGE STYLES
+   ============================================================================= */
+
+/* Title area */
+[data-docs-title] {
+  color: var(--dp-text-primary);
+  font-family: var(--dp-font-mono);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+[data-docs-description] {
+  color: var(--dp-text-secondary);
+  font-family: var(--dp-font-mono);
+}
+
+/* Callouts / Admonitions */
+[data-callout] {
+  background: var(--dp-surface) !important;
+  border: 1px solid var(--dp-border) !important;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+[data-callout='note'] {
+  border-left: 3px solid var(--dp-accent) !important;
+}
+
+[data-callout='warning'] {
+  border-left: 3px solid var(--dp-warning) !important;
+}
+
+[data-callout='error'],
+[data-callout='danger'] {
+  border-left: 3px solid var(--dp-error) !important;
+}
+
+[data-callout='tip'],
+[data-callout='success'] {
+  border-left: 3px solid var(--dp-success) !important;
+}
+
+/* =============================================================================
+   INTERACTIVE ELEMENTS
+   ============================================================================= */
+
+button, [role='button'] {
+  font-family: var(--dp-font-mono);
+}
+
+/* Primary buttons */
+button[data-primary],
+.fd-button-primary {
+  background: var(--dp-accent) !important;
+  color: var(--dp-background) !important;
+  border: none !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+button[data-primary]:hover,
+.fd-button-primary:hover {
+  background: var(--dp-text-primary) !important;
+  box-shadow: 0 0 20px var(--dp-accent-glow), 0 0 40px var(--dp-accent-glow);
+}
+
+/* Secondary buttons */
+button[data-secondary],
+.fd-button-secondary {
+  background: var(--dp-surface-elevated) !important;
+  color: var(--dp-text-primary) !important;
+  border: 1px solid var(--dp-border) !important;
+}
+
+button[data-secondary]:hover,
+.fd-button-secondary:hover {
+  border-color: var(--dp-accent) !important;
+  color: var(--dp-accent) !important;
+}
+
+/* =============================================================================
+   TABLES
+   ============================================================================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--dp-font-mono);
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+}
+
+thead {
+  background: var(--dp-surface);
+  border-bottom: 1px solid var(--dp-border);
+}
+
+th {
+  color: var(--dp-text-primary);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dp-border-subtle);
+  color: var(--dp-text-secondary);
+}
+
+tr:hover td {
+  background: var(--dp-surface);
+}
+
+/* =============================================================================
+   SCROLLBAR
+   ============================================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dp-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dp-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dp-text-muted);
+}
+
+/* =============================================================================
+   SELECTION
+   ============================================================================= */
+
+::selection {
+  background: var(--dp-accent);
+  color: var(--dp-background);
+}
+
+/* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--dp-accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--dp-accent-glow), 0 0 60px var(--dp-accent-glow);
+  }
+}
+
+/* Page content animation */
+main {
+  animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =============================================================================
+   UTILITY CLASSES
+   ============================================================================= */
+
+.accent-glow {
+  box-shadow:
+    0 0 20px var(--dp-accent-glow),
+    0 0 60px var(--dp-accent-glow);
+}
+
+.terminal-cursor::after {
+  content: '_';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--dp-text-primary) 0%, var(--dp-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* =============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  pre {
+    font-size: 0.8125rem;
+    padding: 0.75rem !important;
+  }
+
+  /* Hide grid on mobile for performance */
+  body::before {
+    background-size: 32px 32px;
+    opacity: 0.5;
+  }
+}
+
+/* =============================================================================
+   PRINT STYLES
+   ============================================================================= */
+
+@media print {
+  body::before,
+  body::after {
+    display: none;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  a {
+    color: black;
+    text-decoration: underline;
+  }
+
+  pre {
+    border: 1px solid #ccc;
+  }
+}

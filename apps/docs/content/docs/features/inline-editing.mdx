@@ -1,0 +1,155 @@
+---
+title: Inline Editing
+description: Edit, insert, and delete data directly in the results viewer
+---
+
+# Inline Editing
+
+data-peek allows you to edit data directly in the results viewer, without writing SQL.
+
+## Requirements
+
+To use inline editing:
+
+1. **Primary Key Required** - The table must have a primary key
+2. **SELECT Query** - Results must come from a single table
+3. **Active Connection** - Must be connected to execute changes
+
+<Callout type="warning">
+  Tables without primary keys cannot be edited inline. This is a safety feature to prevent accidental bulk updates.
+</Callout>
+
+## Enabling Edit Mode
+
+1. Run a query or open a table preview
+2. Click the **Edit** button in the results toolbar
+3. The toolbar changes to show editing options
+
+## Editing Cells
+
+### Update a Value
+
+1. **Click** on any cell (single click)
+2. Edit the value in the input field
+3. Press **Enter** to confirm or **Escape** to cancel
+4. The cell shows with a highlight indicating it's modified
+
+### Input Types
+
+data-peek provides type-appropriate inputs:
+
+| Data Type | Input Type |
+|-----------|------------|
+| text, varchar | Text input / textarea |
+| integer, numeric | Number input |
+| boolean | Checkbox |
+| date | Date picker |
+| timestamp | Date-time picker |
+| enum | Dropdown with valid values |
+| json, jsonb | JSON editor |
+
+### Setting NULL
+
+- Clear the input and press Enter
+- Or use the NULL button in the cell editor
+
+## Adding Rows
+
+1. Click **Add Row** in the edit toolbar
+2. A new row appears at the bottom with empty values
+3. Fill in the required columns
+4. The row shows as "New" until saved
+
+<Callout type="tip">
+  Default values are auto-populated for columns that have them defined.
+</Callout>
+
+## Deleting Rows
+
+1. Click the **delete icon** (🗑) on any row
+2. The row is marked for deletion (shown with strikethrough)
+3. Click again to unmark
+
+## Reviewing Changes
+
+Before saving, review your changes:
+
+### Pending Changes Count
+
+The toolbar shows:
+- **X updates** - Modified cells
+- **X inserts** - New rows
+- **X deletes** - Rows to delete
+
+### Preview SQL
+
+Click **Preview SQL** to see the generated SQL statements:
+
+```sql
+-- Updates
+UPDATE users SET email = 'new@example.com' WHERE id = 123;
+
+-- Inserts
+INSERT INTO users (name, email) VALUES ('John', 'john@example.com');
+
+-- Deletes
+DELETE FROM users WHERE id = 456;
+```
+
+## Saving Changes
+
+Click **Save Changes** to execute:
+
+1. All changes are wrapped in a transaction
+2. If any statement fails, all changes are rolled back
+3. On success, results are refreshed
+
+## Discarding Changes
+
+Click **Discard Changes** to:
+- Revert all modified cells to original values
+- Remove all new rows
+- Unmark deleted rows
+
+## Reverting Individual Changes
+
+### Revert a Cell
+
+Right-click a modified cell and select **Revert**
+
+### Revert a Row
+
+Right-click a row and select **Revert Row Changes**
+
+## Edit Workflow Example
+
+1. Query your data: `SELECT * FROM products WHERE category = 'Electronics'`
+2. Click **Edit** to enter edit mode
+3. Update a product's price by clicking the cell
+4. Add a new product with **Add Row**
+5. Mark an obsolete product for deletion
+6. Click **Preview SQL** to review
+7. Click **Save Changes** to commit
+
+## Safety Features
+
+### Transaction Safety
+
+All changes execute in a single transaction. If one fails, everything rolls back.
+
+### Validation
+
+- Type checking before save
+- Required fields must have values
+- Foreign key constraints are validated
+
+### Confirmation
+
+Destructive actions (delete, discard) require confirmation.
+
+## Limitations
+
+- Cannot edit views (only base tables)
+- Cannot edit tables without primary keys
+- Cannot edit results from JOINs
+- Maximum batch size varies by database

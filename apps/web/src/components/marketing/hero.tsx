@@ -26,7 +26,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-20">
         <div className="flex flex-col items-center text-center">
           {/* Early Bird + Open Source Badge */}
           <div className="animate-fade-in-up flex flex-wrap items-center justify-center gap-3 mb-8">
@@ -42,7 +42,7 @@ export function Hero() {
 
           {/* Main Headline */}
           <h1
-            className="animate-fade-in-up delay-100 text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.9] mb-6"
+            className="animate-fade-in-up delay-100 text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.9] mb-4 sm:mb-6"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             Peek at your data.
@@ -52,7 +52,7 @@ export function Hero() {
 
           {/* Subheadline */}
           <p
-            className="animate-fade-in-up delay-200 text-lg md:text-xl text-[--color-text-secondary] max-w-2xl mb-10 leading-relaxed"
+            className="animate-fade-in-up delay-200 text-base sm:text-lg md:text-xl text-[--color-text-secondary] max-w-2xl mb-8 sm:mb-10 leading-relaxed px-2"
             style={{ fontFamily: 'var(--font-body)' }}
           >
             A lightning-fast PostgreSQL client for developers who value simplicity.
@@ -61,19 +61,19 @@ export function Hero() {
 
           {/* Terminal-style feature highlight */}
           <div
-            className="animate-fade-in-up delay-300 mb-10 px-6 py-3 rounded-full bg-[--color-surface] border border-[--color-border] inline-flex items-center gap-4"
+            className="animate-fade-in-up delay-300 mb-10 px-4 sm:px-6 py-3 rounded-2xl sm:rounded-full bg-[--color-surface] border border-[--color-border] inline-flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-4"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
-            <span className="flex items-center gap-2 text-sm">
+            <span className="flex items-center gap-2 text-xs sm:text-sm">
               <Zap className="w-4 h-4 text-[--color-warning]" />
               <span className="text-[--color-text-muted]">&lt; 2s startup</span>
             </span>
-            <span className="w-px h-4 bg-[--color-border]" />
-            <span className="flex items-center gap-2 text-sm">
+            <span className="hidden sm:block w-px h-4 bg-[--color-border]" />
+            <span className="flex items-center gap-2 text-xs sm:text-sm">
               <span className="text-[--color-text-muted]">keyboard-first</span>
             </span>
-            <span className="w-px h-4 bg-[--color-border]" />
-            <span className="flex items-center gap-2 text-sm">
+            <span className="hidden sm:block w-px h-4 bg-[--color-border]" />
+            <span className="flex items-center gap-2 text-xs sm:text-sm">
               <span className="text-[--color-text-muted]">all features free</span>
             </span>
           </div>
@@ -103,15 +103,15 @@ export function Hero() {
           </p>
 
           {/* Hero Screenshot */}
-          <div className="animate-scale-in delay-600 mt-16 w-full max-w-5xl">
+          <div className="animate-scale-in delay-600 mt-10 sm:mt-16 w-full max-w-5xl">
             <div className="relative">
               {/* Window Chrome */}
-              <div className="absolute -top-px -left-px -right-px h-10 rounded-t-2xl bg-[--color-surface-elevated] border border-[--color-border] border-b-0 flex items-center px-4 gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-                <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-                <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+              <div className="absolute -top-px -left-px -right-px h-8 sm:h-10 rounded-t-xl sm:rounded-t-2xl bg-[--color-surface-elevated] border border-[--color-border] border-b-0 flex items-center px-3 sm:px-4 gap-1.5 sm:gap-2">
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#ff5f57]" />
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#febc2e]" />
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#28c840]" />
                 <span
-                  className="ml-4 text-xs text-[--color-text-muted]"
+                  className="ml-2 sm:ml-4 text-[10px] sm:text-xs text-[--color-text-muted]"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
                   data-peek
@@ -119,21 +119,21 @@ export function Hero() {
               </div>
 
               {/* Screenshot Placeholder */}
-              <div className="screenshot-placeholder mt-10 min-h-[400px] md:min-h-[500px] rounded-2xl rounded-t-none border-t-0 shadow-2xl shadow-black/50">
-                <div className="flex flex-col items-center gap-4 z-10">
+              <div className="screenshot-placeholder mt-8 sm:mt-10 min-h-[280px] sm:min-h-[400px] md:min-h-[500px] rounded-xl sm:rounded-2xl rounded-t-none border-t-0 shadow-2xl shadow-black/50">
+                <div className="flex flex-col items-center gap-3 sm:gap-4 z-10">
                   <div
-                    className="w-16 h-16 rounded-2xl bg-[--color-accent]/10 border border-[--color-accent]/20 flex items-center justify-center"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-[--color-accent]/10 border border-[--color-accent]/20 flex items-center justify-center"
                   >
-                    <span className="text-2xl">📸</span>
+                    <span className="text-xl sm:text-2xl">📸</span>
                   </div>
-                  <span>screenshot_hero.png</span>
-                  <span className="text-xs text-[--color-text-muted]">1920 × 1080 recommended</span>
+                  <span className="text-sm sm:text-base">screenshot_hero.png</span>
+                  <span className="text-[10px] sm:text-xs text-[--color-text-muted]">1920 × 1080 recommended</span>
                 </div>
               </div>
 
               {/* Glow Effect */}
               <div
-                className="absolute -inset-4 -z-10 rounded-3xl opacity-30"
+                className="absolute -inset-2 sm:-inset-4 -z-10 rounded-2xl sm:rounded-3xl opacity-30"
                 style={{
                   background: 'radial-gradient(ellipse at center top, var(--color-accent-glow) 0%, transparent 60%)',
                 }}

@@ -1,0 +1,87 @@
+---
+title: Query Plans
+description: Analyze query performance with EXPLAIN ANALYZE
+---
+
+# Query Plans
+
+Use EXPLAIN ANALYZE to understand how PostgreSQL executes your queries and optimize performance.
+
+## Running EXPLAIN
+
+1. Write your SELECT query
+2. Execute the query to see results
+3. Click **Explain** or **Explain Analyze** in the toolbar
+
+### Modes
+
+| Mode | Description |
+|------|-------------|
+| **EXPLAIN** | Shows estimated plan without executing |
+| **EXPLAIN ANALYZE** | Runs query and shows actual statistics |
+
+<Callout type="info">
+  EXPLAIN ANALYZE actually executes the query, so use with caution on slow queries or data-modifying statements.
+</Callout>
+
+## Plan Viewer
+
+### Node Tree
+
+The plan displays as a collapsible tree:
+
+```
+Aggregate (cost=1000..1001 rows=1)
+  └── Index Scan on users_pkey (cost=0..900 rows=10000)
+        Index Cond: (active = true)
+```
+
+### Node Information
+
+Each node shows:
+
+| Metric | Description |
+|--------|-------------|
+| **Node Type** | Type of operation (Seq Scan, Index Scan, etc.) |
+| **Cost** | Estimated startup..total cost |
+| **Rows** | Estimated rows (vs actual with ANALYZE) |
+| **Width** | Average row width in bytes |
+| **Time** | Actual execution time (ANALYZE only) |
+| **Loops** | Number of times node was executed |
+
+### Color Coding
+
+Nodes are color-coded by type:
+- 🔵 **Scans**: Seq Scan, Index Scan, Bitmap Scan
+- 🟢 **Joins**: Nested Loop, Hash Join, Merge Join
+- 🟡 **Sorts**: Sort, Incremental Sort
+- 🟣 **Aggregates**: Aggregate, GroupAggregate, HashAggregate
+
+## Understanding Plans
+
+### Common Node Types
+
+| Node | Description | Performance |
+|------|-------------|-------------|
+| **Seq Scan** | Full table scan | Slow on large tables |
+| **Index Scan** | Uses index | Fast for selective queries |
+| **Index Only Scan** | Uses covering index | Very fast |
+| **Bitmap Scan** | Two-phase index scan | Good for medium selectivity |
+| **Hash Join** | Hash-based join | Fast for large joins |
+| **Nested Loop** | Row-by-row join | Fast for small sets |
+
+### Performance Warnings
+
+Watch for:
+- **High row estimates** with low actual rows (bad statistics)
+- **Sequential scans** on large tables
+- **Sort operations** without indexes
+- **High loop counts** in nested loops
+
+## Optimization Tips
+
+1. **Add indexes** for columns in WHERE clauses
+2. **Update statistics** with `ANALYZE table_name`
+3. **Check for missing indexes** on join columns
+4. **Consider partial indexes** for filtered queries
+5. **Use LIMIT** when possible

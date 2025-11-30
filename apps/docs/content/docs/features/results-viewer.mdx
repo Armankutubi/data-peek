@@ -1,0 +1,140 @@
+---
+title: Results Viewer
+description: View and interact with query results
+---
+
+# Results Viewer
+
+The results viewer displays your query output in a powerful, interactive table.
+
+## Results Table
+
+### Column Headers
+
+- Click a column header to sort by that column
+- Click again to reverse sort order
+- Data type badge shows the column type
+
+### Cells
+
+- **Click** any cell to copy its value
+- **Hover** to see full content for truncated values
+- **Right-click** for context menu options
+
+### Data Type Formatting
+
+| Type | Display |
+|------|---------|
+| Text | Plain text (truncated if long) |
+| Numbers | Right-aligned, formatted |
+| Dates | ISO format with time |
+| Boolean | Checkbox icon (✓ or ✗) |
+| JSON | Collapsed preview, expandable |
+| NULL | Gray `NULL` badge |
+
+## JSON Viewer
+
+For JSON/JSONB columns, data-peek provides a rich viewer:
+
+### Inline Preview
+
+- Small JSON values show inline
+- Larger values show a preview with "..." indicator
+- Click to expand
+
+### Expanded View
+
+When expanded, JSON shows:
+- Collapsible tree structure
+- Color-coded values by type:
+  - 🟢 Strings in green
+  - 🔵 Numbers in blue
+  - 🟡 Booleans in yellow
+  - ⚪ Null in gray
+- Copy buttons at each level
+
+### Settings
+
+Configure JSON display in Settings:
+
+- **Expand JSON by Default** - Auto-expand JSON columns
+- **Default Expansion Depth** - How many levels to expand (1-5)
+
+## Pagination
+
+### Page Navigation
+
+Results are paginated for performance:
+
+- **Page size** options: 25, 50, 100, 250, 500 rows
+- **Navigation** buttons: First, Previous, Next, Last
+- **Page indicator** shows current page and total
+
+### Changing Page Size
+
+1. Click the page size dropdown
+2. Select desired size
+3. Results reload with new page size
+
+<Callout type="tip">
+  Smaller page sizes make navigation faster, especially for tables with many columns or JSON data.
+</Callout>
+
+## Toolbar Actions
+
+### Query Metrics
+
+The toolbar shows:
+- **Row count** - Total rows returned
+- **Duration** - Query execution time (ms)
+
+### Export
+
+Click **Export** to download results:
+
+| Format | Description |
+|--------|-------------|
+| CSV | Comma-separated values |
+| JSON | JSON array of objects |
+
+See [Export](/docs/features/export) for more details.
+
+### Edit Mode
+
+Click **Edit** to enable inline editing. See [Inline Editing](/docs/features/inline-editing) for details.
+
+### Execution Plan
+
+Click **Explain** to view the query execution plan. See [Query Plans](/docs/features/query-plans) for details.
+
+## Context Menu
+
+Right-click any cell for:
+
+| Option | Description |
+|--------|-------------|
+| **Copy Cell** | Copy the cell value |
+| **Copy Row as JSON** | Copy entire row as JSON |
+| **Copy Column** | Copy all values in column |
+| **Filter by Value** | Add WHERE clause for this value |
+
+## Foreign Key Navigation
+
+If a column is a foreign key:
+
+1. The cell shows a link icon
+2. `Cmd+Click` (macOS) or `Ctrl+Click` (Windows/Linux) to navigate
+3. Opens a new tab with the referenced record
+
+<Callout type="info">
+  Foreign key navigation requires the referenced table to be accessible in the current connection.
+</Callout>
+
+## Performance Tips
+
+For large result sets:
+
+1. **Use LIMIT** - Always limit your queries
+2. **Select specific columns** - Avoid `SELECT *` when possible
+3. **Use pagination** - Navigate page by page
+4. **Filter early** - Add WHERE clauses to reduce data

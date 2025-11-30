@@ -1,0 +1,93 @@
+---
+title: Export
+description: Export query results to CSV and JSON formats
+---
+
+# Export
+
+Export your query results to CSV or JSON files for use in other applications.
+
+## Export Formats
+
+### CSV
+
+Comma-separated values, compatible with:
+- Excel, Google Sheets
+- Data analysis tools
+- Import into other databases
+
+### JSON
+
+JavaScript Object Notation, compatible with:
+- Web applications
+- APIs and data pipelines
+- Programming languages
+
+## Exporting Results
+
+1. Run your query
+2. Click the **Export** button in the results toolbar
+3. Choose your format:
+   - **Export as CSV**
+   - **Export as JSON**
+4. The file downloads automatically
+
+## File Naming
+
+Files are named with timestamp:
+- `query_results_2024-01-15_14-30-45.csv`
+- `query_results_2024-01-15_14-30-45.json`
+
+For table previews:
+- `users_2024-01-15_14-30-45.csv`
+
+## CSV Format
+
+### Structure
+
+```csv
+id,name,email,created_at
+1,"John Doe","john@example.com","2024-01-15T10:30:00Z"
+2,"Jane Smith","jane@example.com","2024-01-15T11:45:00Z"
+```
+
+### Features
+
+- Headers from column names
+- Proper quoting for special characters
+- NULL values as empty strings
+- UTF-8 encoding
+
+## JSON Format
+
+### Structure
+
+```json
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "created_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "created_at": "2024-01-15T11:45:00Z"
+  }
+]
+```
+
+### Features
+
+- Array of objects
+- Proper JSON types (strings, numbers, booleans)
+- NULL values as `null`
+- Pretty-printed for readability
+
+## Tips
+
+- **Large exports**: Export happens in memory, so very large results may be slow
+- **All data**: Export includes all rows from the current page
+- **Encoding**: Files use UTF-8 encoding

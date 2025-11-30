@@ -1,0 +1,179 @@
+---
+title: Table Designer
+description: Create and modify tables with a visual editor
+---
+
+# Table Designer
+
+The Table Designer provides a visual interface for creating and modifying database tables without writing DDL.
+
+## Opening Table Designer
+
+### Create New Table
+
+1. Right-click a schema in the sidebar
+2. Select **New Table**
+3. A new Table Designer tab opens
+
+### Edit Existing Table
+
+1. Right-click a table in the sidebar
+2. Select **Design Table**
+3. The Table Designer loads the existing structure
+
+## Designer Interface
+
+### Table Settings
+
+| Field | Description |
+|-------|-------------|
+| **Table Name** | Name of the table |
+| **Schema** | Schema where table will be created |
+| **Comment** | Optional description |
+| **Unlogged** | Faster writes, but not crash-safe |
+
+### Columns Section
+
+Add, edit, and reorder columns:
+
+| Property | Description |
+|----------|-------------|
+| **Name** | Column name |
+| **Type** | Data type (with 50+ PostgreSQL types) |
+| **Length/Precision** | Size modifier for applicable types |
+| **Not Null** | Whether NULL is allowed |
+| **Primary Key** | Include in primary key |
+| **Default** | Default value expression |
+| **Comment** | Column description |
+
+### Column Actions
+
+- **Add Column** - Add a new column
+- **Duplicate** - Copy an existing column
+- **Delete** - Remove a column
+- **Reorder** - Drag and drop to change order
+
+## Data Types
+
+Types are grouped by category:
+
+### Numeric
+- `smallint`, `integer`, `bigint`
+- `serial`, `bigserial`
+- `numeric`, `decimal`
+- `real`, `double precision`
+- `money`
+
+### Text
+- `char(n)`, `varchar(n)`, `text`
+- `bytea`
+
+### Date/Time
+- `timestamp`, `timestamptz`
+- `date`, `time`, `timetz`
+- `interval`
+
+### Boolean & UUID
+- `boolean`
+- `uuid`
+
+### JSON
+- `json`, `jsonb`
+
+### Arrays
+- Any type with `[]` suffix (e.g., `integer[]`, `text[]`)
+
+## Default Values
+
+Choose from three types:
+
+| Type | Example | Description |
+|------|---------|-------------|
+| **Literal** | `'active'`, `0`, `true` | Static value |
+| **Expression** | `now()`, `gen_random_uuid()` | SQL function |
+| **Sequence** | `nextval('seq_name')` | Auto-increment |
+
+## Constraints
+
+### Primary Key
+
+- Check **PK** on columns to include
+- Composite keys supported (multiple columns)
+- Or add via Constraints section
+
+### Foreign Keys
+
+1. Click **Add Constraint** → **Foreign Key**
+2. Select local column(s)
+3. Select referenced table and column(s)
+4. Choose referential actions:
+   - ON DELETE: CASCADE, RESTRICT, SET NULL, SET DEFAULT, NO ACTION
+   - ON UPDATE: CASCADE, RESTRICT, SET NULL, SET DEFAULT, NO ACTION
+
+### Unique Constraints
+
+1. Click **Add Constraint** → **Unique**
+2. Select column(s) to be unique
+
+### Check Constraints
+
+1. Click **Add Constraint** → **Check**
+2. Enter the check expression (e.g., `price > 0`)
+
+## Indexes
+
+Add indexes for query performance:
+
+| Option | Description |
+|--------|-------------|
+| **Name** | Index name |
+| **Method** | btree, hash, gist, gin, spgist, brin |
+| **Columns** | Columns to index |
+| **Unique** | Enforce uniqueness |
+| **Where** | Partial index condition |
+| **Include** | Covering index columns |
+
+## Preview SQL
+
+Click **Preview SQL** to see the generated DDL:
+
+```sql
+CREATE TABLE public.products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price NUMERIC(10,2) NOT NULL CHECK (price > 0),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_products_name ON public.products (name);
+```
+
+## Saving Changes
+
+### Create Mode
+
+Click **Create Table** to execute the CREATE TABLE statement.
+
+### Edit Mode
+
+Click **Save Changes** to execute ALTER TABLE statements for your modifications.
+
+<Callout type="info">
+  In edit mode, data-peek generates minimal ALTER statements - only what changed.
+</Callout>
+
+## Discarding Changes
+
+Click **Discard** to reset to the original state (or empty for new tables).
+
+## Validation
+
+The designer validates your design:
+
+- Table name is required
+- At least one column required
+- Unique column names
+- Valid constraint references
+- FK columns match referenced columns
+
+Errors appear in the validation panel at the bottom.

@@ -1,0 +1,97 @@
+---
+title: MySQL
+description: MySQL support in data-peek
+---
+
+# MySQL
+
+data-peek supports MySQL databases with core features.
+
+## Supported Versions
+
+- MySQL 5.7+
+- MySQL 8.0+
+- MariaDB 10.3+
+- Compatible with cloud providers: PlanetScale, AWS RDS, etc.
+
+## Connection
+
+```
+mysql://[user]:[password]@[host]:[port]/[database]
+```
+
+### Default Port
+
+MySQL default port is `3306`.
+
+## Supported Features
+
+### Query Execution
+
+- SELECT, INSERT, UPDATE, DELETE
+- JOINs, subqueries, CTEs
+- All standard SQL operations
+
+### Schema Explorer
+
+- Databases (schemas)
+- Tables and views
+- Columns with types and constraints
+- Indexes
+
+### Data Editing
+
+- Inline cell editing
+- Insert new rows
+- Delete rows
+- SQL preview
+
+### Table Designer
+
+- Create tables with columns
+- Primary keys and foreign keys
+- Indexes
+- Default values
+
+### Export
+
+- CSV export
+- JSON export
+
+## MySQL-Specific Notes
+
+### EXPLAIN
+
+MySQL EXPLAIN is supported but shows different output format than PostgreSQL. EXPLAIN ANALYZE is not available in MySQL 5.7.
+
+### Identifiers
+
+MySQL uses backticks (\`) for identifier quoting instead of double quotes.
+
+### Data Types
+
+Commonly used MySQL types:
+- `INT`, `BIGINT`, `TINYINT`, `SMALLINT`
+- `VARCHAR`, `TEXT`, `CHAR`
+- `DATETIME`, `TIMESTAMP`, `DATE`, `TIME`
+- `DECIMAL`, `FLOAT`, `DOUBLE`
+- `BOOLEAN` (alias for TINYINT(1))
+- `JSON`
+- `ENUM`
+
+### Auto Increment
+
+MySQL uses `AUTO_INCREMENT` instead of sequences. The table designer handles this automatically.
+
+## Limitations vs PostgreSQL
+
+Some PostgreSQL features are not available in MySQL:
+
+- Array types
+- Range types
+- JSONB (use JSON)
+- EXPLAIN ANALYZE with buffers
+- Sequences (use AUTO_INCREMENT)
+- Advanced index types (gist, gin, etc.)
+- Inheritance
+- Partial indexes

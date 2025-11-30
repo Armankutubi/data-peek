@@ -1,0 +1,16 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "---Getting Started---",
+    "getting-started",
+    "---Features---",
+    "features",
+    "---Configuration---",
+    "configuration",
+    "---Database Support---",
+    "database-support",
+    "---Reference---",
+    "reference"
+  ]
+}

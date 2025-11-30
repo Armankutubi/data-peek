@@ -1,0 +1,144 @@
+---
+title: Query Editor
+description: Write and execute SQL queries with the Monaco-powered editor
+---
+
+# Query Editor
+
+data-peek's query editor is powered by Monaco, the same editor engine used in VS Code. It provides a powerful, familiar environment for writing SQL.
+
+## Editor Features
+
+### Syntax Highlighting
+
+Full SQL syntax highlighting with support for:
+- Keywords (SELECT, FROM, WHERE, etc.)
+- Functions (COUNT, SUM, NOW, etc.)
+- Strings, numbers, and operators
+- Comments (single-line and multi-line)
+
+### Auto-Completion
+
+As you type, the editor suggests:
+- SQL keywords
+- Table and column names (schema-aware)
+- Function names
+- Snippets for common patterns
+
+<Callout type="tip">
+  Press `Ctrl+Space` to manually trigger auto-completion suggestions.
+</Callout>
+
+### SQL Formatting
+
+Auto-format your SQL for better readability:
+
+- **Shortcut:** `Cmd+Shift+F` (macOS) or `Ctrl+Shift+F` (Windows/Linux)
+- **Menu:** View → Format SQL
+
+Before:
+```sql
+select id,name,email from users where created_at>'2024-01-01' order by name
+```
+
+After:
+```sql
+SELECT
+  id,
+  name,
+  email
+FROM
+  users
+WHERE
+  created_at > '2024-01-01'
+ORDER BY
+  name
+```
+
+## Executing Queries
+
+### Run Current Query
+
+- **Shortcut:** `Cmd+Enter` (macOS) or `Ctrl+Enter` (Windows/Linux)
+- Executes the query in the editor
+- Results appear below the editor
+
+### Multiple Statements
+
+If your editor contains multiple SQL statements, data-peek executes them all sequentially. Results from each statement are combined.
+
+<Callout type="warning">
+  For safety, only SELECT statements return visible results. INSERT, UPDATE, and DELETE statements report affected row counts.
+</Callout>
+
+## Tab Management
+
+### Creating Tabs
+
+- Click the **+** button in the tab bar
+- Press `Cmd+T` (macOS) or `Ctrl+T` (Windows/Linux)
+- Click a table in the sidebar to open a preview tab
+
+### Tab Types
+
+| Tab Type | Icon | Description |
+|----------|------|-------------|
+| Query | 📝 | Custom SQL query |
+| Table Preview | 📊 | Auto-generated SELECT from table |
+| ERD | 🔗 | Entity relationship diagram |
+| Table Designer | 🛠 | Create/edit table structure |
+
+### Tab Actions
+
+Right-click a tab to:
+- **Close** - Close this tab
+- **Close Others** - Close all except this tab
+- **Close to Right** - Close tabs to the right
+- **Rename** - Give the tab a custom name
+- **Pin** - Keep tab open permanently
+
+### Tab Ordering
+
+Drag and drop tabs to reorder them. Pinned tabs stay on the left.
+
+### Switching Tabs
+
+- Click on a tab
+- Use `Cmd+1` through `Cmd+9` to switch to tabs 1-9
+- Use `Cmd+Option+→` / `Cmd+Option+←` to navigate between tabs
+
+## Query History
+
+Every executed query is saved to history:
+
+1. Open the **History** panel in the sidebar
+2. See all previous queries with:
+   - Timestamp
+   - Execution duration
+   - Row count
+   - Success/error status
+3. Click a history item to load it into a new tab
+
+<Callout type="info">
+  History is stored locally and persists across app restarts. The last 100 queries are kept.
+</Callout>
+
+## Editor Preferences
+
+Customize the editor in Settings:
+
+- **Hide Query Editor by Default** - Start table preview tabs with editor collapsed
+- More customization options coming soon
+
+## Keyboard Shortcuts
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Execute query | `Cmd+Enter` | `Ctrl+Enter` |
+| Format SQL | `Cmd+Shift+F` | `Ctrl+Shift+F` |
+| New tab | `Cmd+T` | `Ctrl+T` |
+| Close tab | `Cmd+W` | `Ctrl+W` |
+| Save query | `Cmd+Shift+S` | `Ctrl+Shift+S` |
+| Toggle autocomplete | `Ctrl+Space` | `Ctrl+Space` |
+| Undo | `Cmd+Z` | `Ctrl+Z` |
+| Redo | `Cmd+Shift+Z` | `Ctrl+Shift+Z` |

@@ -1,0 +1,92 @@
+---
+title: Installation
+description: Download and install data-peek on your system
+---
+
+# Installation
+
+data-peek is available for macOS, Windows, and Linux. Choose your platform below.
+
+## macOS
+
+### Apple Silicon (M1/M2/M3/M4)
+
+1. Download `data-peek-mac-arm64.dmg` from the [releases page](https://github.com/Rohithgilla12/data-peek/releases)
+2. Open the DMG file
+3. Drag data-peek to your Applications folder
+4. Launch data-peek from Applications
+
+<Callout type="info">
+  On first launch, macOS may show a security warning. Right-click the app and select "Open" to bypass this.
+</Callout>
+
+### Intel Macs
+
+1. Download `data-peek-mac-x64.dmg` from the [releases page](https://github.com/Rohithgilla12/data-peek/releases)
+2. Open the DMG file
+3. Drag data-peek to your Applications folder
+4. Launch data-peek from Applications
+
+## Windows
+
+### Installer (Recommended)
+
+1. Download `data-peek-win-setup.exe` from the [releases page](https://github.com/Rohithgilla12/data-peek/releases)
+2. Run the installer
+3. Follow the installation wizard
+4. Launch data-peek from the Start menu
+
+### Portable Version
+
+1. Download `data-peek-win-portable.zip` from the [releases page](https://github.com/Rohithgilla12/data-peek/releases)
+2. Extract to your preferred location
+3. Run `data-peek.exe`
+
+<Callout type="info">
+  The portable version doesn't require installation and can run from a USB drive.
+</Callout>
+
+## Linux
+
+### AppImage (Recommended)
+
+1. Download `data-peek-linux.AppImage` from the [releases page](https://github.com/Rohithgilla12/data-peek/releases)
+2. Make it executable: `chmod +x data-peek-linux.AppImage`
+3. Run: `./data-peek-linux.AppImage`
+
+### Debian/Ubuntu (.deb)
+
+1. Download `data-peek-linux.deb` from the [releases page](https://github.com/Rohithgilla12/data-peek/releases)
+2. Install: `sudo dpkg -i data-peek-linux.deb`
+3. Launch from your applications menu
+
+## Verifying Your Installation
+
+After installation, launch data-peek. You should see the main window with:
+
+- A sidebar on the left showing "No connections"
+- An empty query editor in the main area
+- A dark theme by default
+
+If you see this, you're ready to [create your first connection](/docs/getting-started/first-connection)!
+
+## Troubleshooting
+
+### macOS: "App is damaged and can't be opened"
+
+Run this command in Terminal:
+```bash
+xattr -cr /Applications/data-peek.app
+```
+
+### Linux: AppImage won't run
+
+Make sure you have FUSE installed:
+```bash
+sudo apt install fuse libfuse2  # Debian/Ubuntu
+sudo dnf install fuse           # Fedora
+```
+
+### Windows: Antivirus blocks installation
+
+Some antivirus software may flag the installer. Add an exception for data-peek or temporarily disable real-time protection during installation.
