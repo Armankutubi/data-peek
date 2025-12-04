@@ -15,7 +15,13 @@ import {
   Network,
   Plus,
   Pencil,
-  MoreHorizontal
+  MoreHorizontal,
+  FunctionSquare,
+  Workflow,
+  ArrowRight,
+  Eye,
+  Play,
+  Filter
 } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
@@ -25,7 +31,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import {
@@ -87,20 +96,51 @@ export function SchemaExplorer() {
     new Set(schemas.map((s) => s.name))
   )
   const [expandedTables, setExpandedTables] = React.useState<Set<string>>(new Set())
+  const [expandedRoutines, setExpandedRoutines] = React.useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = React.useState('')
 
-  // Filter schemas and tables based on search query
-  const filteredSchemas = React.useMemo(() => {
-    if (!searchQuery.trim()) return schemas
+  // Filter toggles
+  const [showTables, setShowTables] = React.useState(true)
+  const [showViews, setShowViews] = React.useState(true)
+  const [showFunctions, setShowFunctions] = React.useState(true)
+  const [showProcedures, setShowProcedures] = React.useState(true)
 
-    const query = searchQuery.toLowerCase()
+  const createQueryTab = useTabStore((s) => s.createQueryTab)
+
+  // Filter schemas and tables/routines based on search query and filter toggles
+  const filteredSchemas = React.useMemo(() => {
+    const query = searchQuery.toLowerCase().trim()
+
     return schemas
-      .map((schema) => ({
-        ...schema,
-        tables: schema.tables.filter((table) => table.name.toLowerCase().includes(query))
-      }))
-      .filter((schema) => schema.tables.length > 0)
-  }, [schemas, searchQuery])
+      .map((schema) => {
+        // Filter tables based on type and search
+        const filteredTables = schema.tables.filter((table) => {
+          // Type filter
+          if (table.type === 'table' && !showTables) return false
+          if (table.type === 'view' && !showViews) return false
+          // Search filter
+          if (query && !table.name.toLowerCase().includes(query)) return false
+          return true
+        })
+
+        // Filter routines based on type and search
+        const filteredRoutines = schema.routines?.filter((routine) => {
+          // Type filter
+          if (routine.type === 'function' && !showFunctions) return false
+          if (routine.type === 'procedure' && !showProcedures) return false
+          // Search filter
+          if (query && !routine.name.toLowerCase().includes(query)) return false
+          return true
+        })
+
+        return {
+          ...schema,
+          tables: filteredTables,
+          routines: filteredRoutines
+        }
+      })
+      .filter((schema) => schema.tables.length > 0 || (schema.routines?.length ?? 0) > 0)
+  }, [schemas, searchQuery, showTables, showViews, showFunctions, showProcedures])
 
   // Auto-expand schemas when searching
   React.useEffect(() => {
@@ -113,6 +153,7 @@ export function SchemaExplorer() {
   React.useEffect(() => {
     setExpandedSchemas(new Set(schemas.map((s) => s.name)))
     setExpandedTables(new Set())
+    setExpandedRoutines(new Set())
   }, [schemas])
 
   const toggleSchema = (schemaName: string) => {
@@ -134,6 +175,18 @@ export function SchemaExplorer() {
         next.delete(tableKey)
       } else {
         next.add(tableKey)
+      }
+      return next
+    })
+  }
+
+  const toggleRoutine = (routineKey: string) => {
+    setExpandedRoutines((prev) => {
+      const next = new Set(prev)
+      if (next.has(routineKey)) {
+        next.delete(routineKey)
+      } else {
+        next.add(routineKey)
       }
       return next
     })
@@ -173,6 +226,62 @@ export function SchemaExplorer() {
     if (!activeConnectionId) return
     createTableDesignerTab(activeConnectionId, schemaName, tableName)
   }
+
+  // Generate execute SQL template based on database type
+  const generateExecuteSQL = (
+    schemaName: string,
+    routineName: string,
+    routineType: 'function' | 'procedure',
+    parameters: Array<{ name: string; dataType: string; mode: string }>
+  ): string => {
+    const connection = getActiveConnection()
+    if (!connection) return ''
+
+    const dbType = connection.dbType
+    const qualifiedName = `"${schemaName}"."${routineName}"`
+    const paramPlaceholders = parameters
+      .filter((p) => p.mode === 'IN' || p.mode === 'INOUT')
+      .map((p) => `/* ${p.name}: ${p.dataType} */`)
+      .join(', ')
+
+    switch (dbType) {
+      case 'postgresql':
+        if (routineType === 'procedure') {
+          return `CALL ${qualifiedName}(${paramPlaceholders});`
+        }
+        return `SELECT * FROM ${qualifiedName}(${paramPlaceholders});`
+
+      case 'mysql':
+        return `CALL \`${schemaName}\`.\`${routineName}\`(${paramPlaceholders});`
+
+      case 'mssql': {
+        const mssqlParams = parameters
+          .filter((p) => p.mode === 'IN' || p.mode === 'INOUT')
+          .map((p) => `@${p.name} = /* ${p.dataType} */`)
+          .join(', ')
+        return `EXEC [${schemaName}].[${routineName}] ${mssqlParams};`
+      }
+
+      default:
+        return `-- Execute ${routineName}`
+    }
+  }
+
+  const handleExecuteRoutine = (
+    schemaName: string,
+    routineName: string,
+    routineType: 'function' | 'procedure',
+    parameters: Array<{ name: string; dataType: string; mode: string }>
+  ) => {
+    const connection = getActiveConnection()
+    if (!connection) return
+
+    const sql = generateExecuteSQL(schemaName, routineName, routineType, parameters)
+    createQueryTab(connection.id, sql)
+  }
+
+  // Check if any filter is active (not all enabled)
+  const isFilterActive = !showTables || !showViews || !showFunctions || !showProcedures
 
   if (!activeConnectionId) {
     return (
@@ -248,6 +357,54 @@ export function SchemaExplorer() {
           >
             <Network className="size-3.5" />
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`size-5 p-0 hover:bg-sidebar-accent ${isFilterActive ? 'text-primary' : ''}`}
+                title="Filter objects"
+              >
+                <Filter className="size-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuLabel className="text-xs">Show Objects</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem
+                checked={showTables}
+                onCheckedChange={setShowTables}
+                className="text-xs"
+              >
+                <Table2 className="size-3.5 mr-2 text-muted-foreground" />
+                Tables
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={showViews}
+                onCheckedChange={setShowViews}
+                className="text-xs"
+              >
+                <Eye className="size-3.5 mr-2 text-purple-500" />
+                Views
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={showFunctions}
+                onCheckedChange={setShowFunctions}
+                className="text-xs"
+              >
+                <FunctionSquare className="size-3.5 mr-2 text-cyan-500" />
+                Functions
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={showProcedures}
+                onCheckedChange={setShowProcedures}
+                className="text-xs"
+              >
+                <Workflow className="size-3.5 mr-2 text-orange-500" />
+                Procedures
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"
@@ -266,7 +423,7 @@ export function SchemaExplorer() {
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search tables..."
+              placeholder="Search tables, routines..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-7 pl-7 pr-7 text-xs"
@@ -286,7 +443,7 @@ export function SchemaExplorer() {
         <SidebarMenu>
           {filteredSchemas.length === 0 ? (
             <div className="px-2 py-4 text-xs text-muted-foreground text-center">
-              {searchQuery ? 'No tables match your search' : 'No schemas found'}
+              {searchQuery ? 'No tables or routines match your search' : 'No schemas found'}
             </div>
           ) : (
             filteredSchemas.map((schema) => (
@@ -304,7 +461,7 @@ export function SchemaExplorer() {
                       <SchemaIcon className="size-4 text-muted-foreground" />
                       <span>{schema.name}</span>
                       <Badge variant="outline" className="ml-auto text-[10px] px-1.5 py-0">
-                        {schema.tables.length}
+                        {schema.tables.length + (schema.routines?.length ?? 0)}
                       </Badge>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -420,6 +577,137 @@ export function SchemaExplorer() {
                                       </Tooltip>
                                     </TooltipProvider>
                                   ))}
+                                </div>
+                              </CollapsibleContent>
+                            </SidebarMenuSubItem>
+                          </Collapsible>
+                        )
+                      })}
+                      {/* Routines (Functions and Stored Procedures) */}
+                      {schema.routines?.map((routine) => {
+                        const routineKey = `${schema.name}.${routine.name}`
+                        return (
+                          <Collapsible
+                            key={routineKey}
+                            open={expandedRoutines.has(routineKey)}
+                            onOpenChange={() => toggleRoutine(routineKey)}
+                          >
+                            <SidebarMenuSubItem>
+                              <div className="flex items-center group/routine">
+                                <CollapsibleTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="size-5 p-0 mr-1">
+                                    <ChevronRight
+                                      className={`size-3 transition-transform ${expandedRoutines.has(routineKey) ? 'rotate-90' : ''}`}
+                                    />
+                                  </Button>
+                                </CollapsibleTrigger>
+                                <SidebarMenuSubButton className="flex-1 cursor-default">
+                                  {routine.type === 'function' ? (
+                                    <FunctionSquare className="size-3.5 text-cyan-500" />
+                                  ) : (
+                                    <Workflow className="size-3.5 text-orange-500" />
+                                  )}
+                                  <span className="flex-1">{routine.name}</span>
+                                  <Badge
+                                    variant="outline"
+                                    className={`text-[9px] px-1 py-0 ${
+                                      routine.type === 'function'
+                                        ? 'text-cyan-500'
+                                        : 'text-orange-500'
+                                    }`}
+                                  >
+                                    {routine.type === 'function' ? 'fn' : 'proc'}
+                                  </Badge>
+                                </SidebarMenuSubButton>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="size-5 p-0 opacity-0 group-hover/routine:opacity-100 transition-opacity"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <MoreHorizontal className="size-3.5" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" className="w-40">
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleExecuteRoutine(
+                                          schema.name,
+                                          routine.name,
+                                          routine.type,
+                                          routine.parameters
+                                        )
+                                      }
+                                    >
+                                      <Play className="size-4 mr-2" />
+                                      Execute
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                              <CollapsibleContent>
+                                <div className="ml-6 border-l border-border/50 pl-2 py-1 space-y-0.5">
+                                  {/* Return type for functions */}
+                                  {routine.returnType && (
+                                    <div className="flex items-center gap-1.5 py-0.5 px-1 text-xs text-muted-foreground">
+                                      <ArrowRight className="size-3 text-cyan-500" />
+                                      <span className="text-muted-foreground">returns</span>
+                                      <DataTypeBadge type={routine.returnType} />
+                                    </div>
+                                  )}
+                                  {/* Parameters */}
+                                  {routine.parameters.map((param) => (
+                                    <TooltipProvider key={param.name}>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="flex items-center gap-1.5 py-0.5 px-1 text-xs text-muted-foreground hover:bg-accent/50 rounded cursor-default">
+                                            <Columns3 className="size-3" />
+                                            <span>{param.name}</span>
+                                            <Badge
+                                              variant="outline"
+                                              className={`text-[9px] px-1 py-0 ${
+                                                param.mode === 'OUT'
+                                                  ? 'text-orange-400'
+                                                  : param.mode === 'INOUT'
+                                                    ? 'text-yellow-400'
+                                                    : 'text-muted-foreground'
+                                              }`}
+                                            >
+                                              {param.mode}
+                                            </Badge>
+                                            <DataTypeBadge type={param.dataType} />
+                                          </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="right" className="text-xs">
+                                          <div className="space-y-1">
+                                            <div>
+                                              <span className="text-muted-foreground">Type: </span>
+                                              {param.dataType}
+                                            </div>
+                                            <div>
+                                              <span className="text-muted-foreground">Mode: </span>
+                                              {param.mode}
+                                            </div>
+                                            {param.defaultValue && (
+                                              <div>
+                                                <span className="text-muted-foreground">
+                                                  Default:{' '}
+                                                </span>
+                                                {param.defaultValue}
+                                              </div>
+                                            )}
+                                          </div>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  ))}
+                                  {routine.parameters.length === 0 && !routine.returnType && (
+                                    <div className="py-0.5 px-1 text-xs text-muted-foreground italic">
+                                      No parameters
+                                    </div>
+                                  )}
                                 </div>
                               </CollapsibleContent>
                             </SidebarMenuSubItem>

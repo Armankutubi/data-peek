@@ -320,12 +320,46 @@ export interface TableInfo {
 }
 
 /**
+ * Parameter metadata for a routine (function/procedure)
+ */
+export interface RoutineParameterInfo {
+  name: string;
+  dataType: string;
+  /** Parameter mode: IN, OUT, INOUT */
+  mode: 'IN' | 'OUT' | 'INOUT';
+  /** Default value (if any) */
+  defaultValue?: string;
+  /** Position in parameter list (1-indexed) */
+  ordinalPosition: number;
+}
+
+/**
+ * Stored procedure or function metadata
+ */
+export interface RoutineInfo {
+  name: string;
+  type: 'function' | 'procedure';
+  /** Return type (for functions) */
+  returnType?: string;
+  /** Parameters */
+  parameters: RoutineParameterInfo[];
+  /** Language the routine is written in (e.g., 'plpgsql', 'sql') */
+  language?: string;
+  /** Whether the function is deterministic (IMMUTABLE/STABLE/VOLATILE) */
+  volatility?: 'IMMUTABLE' | 'STABLE' | 'VOLATILE';
+  /** Brief description/comment */
+  comment?: string;
+}
+
+/**
  * Schema/namespace metadata
  * Note: SQLite doesn't have schemas, will use 'main' as default
  */
 export interface SchemaInfo {
   name: string;
   tables: TableInfo[];
+  /** Stored procedures and functions */
+  routines?: RoutineInfo[];
 }
 
 /**

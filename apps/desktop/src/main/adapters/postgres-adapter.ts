@@ -12,7 +12,9 @@ import type {
   IndexDefinition,
   SequenceInfo,
   CustomTypeInfo,
-  StatementResult
+  StatementResult,
+  RoutineInfo,
+  RoutineParameterInfo
 } from '@shared/index'
 import type {
   DatabaseAdapter,
@@ -489,6 +491,45 @@ export class PostgresAdapter implements DatabaseAdapter {
         ORDER BY tc.table_schema, tc.table_name, kcu.column_name
       `)
 
+      // Query 5: Get all routines (functions and procedures)
+      const routinesResult = await client.query(`
+        SELECT
+          r.routine_schema,
+          r.routine_name,
+          r.routine_type,
+          r.data_type as return_type,
+          r.external_language as language,
+          p.provolatile as volatility,
+          d.description as comment,
+          r.specific_name
+        FROM information_schema.routines r
+        LEFT JOIN pg_catalog.pg_proc p
+          ON p.proname = r.routine_name
+        LEFT JOIN pg_catalog.pg_namespace n
+          ON n.nspname = r.routine_schema
+          AND p.pronamespace = n.oid
+        LEFT JOIN pg_catalog.pg_description d
+          ON d.objoid = p.oid
+        WHERE r.routine_schema NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+        ORDER BY r.routine_schema, r.routine_name
+      `)
+
+      // Query 6: Get routine parameters
+      const parametersResult = await client.query(`
+        SELECT
+          p.specific_schema,
+          p.specific_name,
+          p.parameter_name,
+          p.data_type,
+          p.parameter_mode,
+          p.parameter_default,
+          p.ordinal_position
+        FROM information_schema.parameters p
+        WHERE p.specific_schema NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+          AND p.parameter_name IS NOT NULL
+        ORDER BY p.specific_schema, p.specific_name, p.ordinal_position
+      `)
+
       // Build foreign key lookup map: "schema.table.column" -> ForeignKeyInfo
       const fkMap = new Map<string, ForeignKeyInfo>()
       for (const row of foreignKeysResult.rows) {
@@ -501,6 +542,48 @@ export class PostgresAdapter implements DatabaseAdapter {
         })
       }
 
+      // Build parameters lookup map: "schema.specific_name" -> RoutineParameterInfo[]
+      const paramsMap = new Map<string, RoutineParameterInfo[]>()
+      for (const row of parametersResult.rows) {
+        const key = `${row.specific_schema}.${row.specific_name}`
+        if (!paramsMap.has(key)) {
+          paramsMap.set(key, [])
+        }
+        paramsMap.get(key)!.push({
+          name: row.parameter_name || '',
+          dataType: row.data_type,
+          mode: (row.parameter_mode?.toUpperCase() || 'IN') as 'IN' | 'OUT' | 'INOUT',
+          defaultValue: row.parameter_default || undefined,
+          ordinalPosition: row.ordinal_position
+        })
+      }
+
+      // Build routines lookup map: "schema" -> RoutineInfo[]
+      const routinesMap = new Map<string, RoutineInfo[]>()
+      for (const row of routinesResult.rows) {
+        if (!routinesMap.has(row.routine_schema)) {
+          routinesMap.set(row.routine_schema, [])
+        }
+        const paramsKey = `${row.routine_schema}.${row.specific_name}`
+        const params = paramsMap.get(paramsKey) || []
+
+        // Map PostgreSQL volatility codes to readable values
+        let volatility: 'IMMUTABLE' | 'STABLE' | 'VOLATILE' | undefined
+        if (row.volatility === 'i') volatility = 'IMMUTABLE'
+        else if (row.volatility === 's') volatility = 'STABLE'
+        else if (row.volatility === 'v') volatility = 'VOLATILE'
+
+        routinesMap.get(row.routine_schema)!.push({
+          name: row.routine_name,
+          type: row.routine_type === 'PROCEDURE' ? 'procedure' : 'function',
+          returnType: row.return_type || undefined,
+          parameters: params,
+          language: row.language || undefined,
+          volatility,
+          comment: row.comment || undefined
+        })
+      }
+
       // Build schema structure
       const schemaMap = new Map<string, SchemaInfo>()
 
@@ -508,7 +591,8 @@ export class PostgresAdapter implements DatabaseAdapter {
       for (const row of schemasResult.rows) {
         schemaMap.set(row.schema_name, {
           name: row.schema_name,
-          tables: []
+          tables: [],
+          routines: routinesMap.get(row.schema_name) || []
         })
       }
 

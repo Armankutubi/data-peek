@@ -12,7 +12,9 @@ import type {
   IndexDefinition,
   SequenceInfo,
   CustomTypeInfo,
-  StatementResult
+  StatementResult,
+  RoutineInfo,
+  RoutineParameterInfo
 } from '@shared/index'
 import type {
   DatabaseAdapter,
@@ -512,13 +514,100 @@ export class MySQLAdapter implements DatabaseAdapter {
         })
       }
 
+      // Get all routines (stored procedures and functions)
+      const [routinesRows] = await connection.query(`
+        SELECT
+          routine_schema,
+          routine_name,
+          routine_type,
+          data_type as return_type,
+          routine_comment as comment,
+          specific_name
+        FROM information_schema.routines
+        WHERE routine_schema NOT IN ('mysql', 'performance_schema', 'information_schema', 'sys')
+        ORDER BY routine_schema, routine_name
+      `)
+
+      const routinesRaw = routinesRows as Array<Record<string, unknown>>
+      const routines = routinesRaw.map((row) =>
+        normalizeRow<{
+          routine_schema: string
+          routine_name: string
+          routine_type: string
+          return_type: string | null
+          comment: string | null
+          specific_name: string
+        }>(row)
+      )
+
+      // Get routine parameters
+      const [paramsRows] = await connection.query(`
+        SELECT
+          specific_schema,
+          specific_name,
+          parameter_name,
+          data_type,
+          parameter_mode,
+          ordinal_position
+        FROM information_schema.parameters
+        WHERE specific_schema NOT IN ('mysql', 'performance_schema', 'information_schema', 'sys')
+          AND parameter_name IS NOT NULL
+        ORDER BY specific_schema, specific_name, ordinal_position
+      `)
+
+      const paramsRaw = paramsRows as Array<Record<string, unknown>>
+      const params = paramsRaw.map((row) =>
+        normalizeRow<{
+          specific_schema: string
+          specific_name: string
+          parameter_name: string | null
+          data_type: string
+          parameter_mode: string | null
+          ordinal_position: number
+        }>(row)
+      )
+
+      // Build parameters lookup map
+      const paramsMap = new Map<string, RoutineParameterInfo[]>()
+      for (const row of params) {
+        const key = `${row.specific_schema}.${row.specific_name}`
+        if (!paramsMap.has(key)) {
+          paramsMap.set(key, [])
+        }
+        paramsMap.get(key)!.push({
+          name: row.parameter_name || '',
+          dataType: row.data_type,
+          mode: (row.parameter_mode?.toUpperCase() || 'IN') as 'IN' | 'OUT' | 'INOUT',
+          ordinalPosition: row.ordinal_position
+        })
+      }
+
+      // Build routines lookup map
+      const routinesMap = new Map<string, RoutineInfo[]>()
+      for (const row of routines) {
+        if (!routinesMap.has(row.routine_schema)) {
+          routinesMap.set(row.routine_schema, [])
+        }
+        const paramsKey = `${row.routine_schema}.${row.specific_name}`
+        const routineParams = paramsMap.get(paramsKey) || []
+
+        routinesMap.get(row.routine_schema)!.push({
+          name: row.routine_name,
+          type: row.routine_type === 'PROCEDURE' ? 'procedure' : 'function',
+          returnType: row.return_type || undefined,
+          parameters: routineParams,
+          comment: row.comment || undefined
+        })
+      }
+
       // Build schema structure
       const schemaMap = new Map<string, SchemaInfo>()
 
       for (const row of schemas) {
         schemaMap.set(row.schema_name, {
           name: row.schema_name,
-          tables: []
+          tables: [],
+          routines: routinesMap.get(row.schema_name) || []
         })
       }
 
