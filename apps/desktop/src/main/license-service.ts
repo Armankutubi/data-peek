@@ -4,6 +4,9 @@ import * as os from 'os'
 import type { LicenseData, LicenseStatus, LicenseType } from '@shared/index'
 import { DATAPEEK_BASE_URL } from '@shared/index'
 import { DpStorage } from './storage'
+import { createLogger } from './lib/logger'
+
+const log = createLogger('license')
 
 let store: DpStorage<{ license?: LicenseData }> | null = null
 
@@ -257,8 +260,8 @@ export async function activateLicense(
       os: os.platform(),
       app_version: getAppVersion()
     }
-    console.log('[license] Activating license at:', `${getApiUrl()}/api/license/activate`)
-    console.log('[license] Request body:', JSON.stringify(requestBody))
+    log.info('Activating license')
+    log.debug('Activation request', requestBody)
 
     const response = await fetch(`${getApiUrl()}/api/license/activate`, {
       method: 'POST',
@@ -267,8 +270,7 @@ export async function activateLicense(
     })
 
     const data = await response.json()
-    console.log('[license] Response status:', response.status)
-    console.log('[license] Response data:', JSON.stringify(data))
+    log.debug('Response status:', response.status)
 
     if (!response.ok || !data.success) {
       return { success: false, error: data.error || 'Activation failed' }
@@ -290,7 +292,7 @@ export async function activateLicense(
     saveLicense(licenseData)
     return { success: true }
   } catch (error) {
-    console.error('[license] Activation error:', error)
+    log.error('Activation error:', error instanceof Error ? error.message : String(error))
     return { success: false, error: 'Network error. Please check your connection and try again.' }
   }
 }
@@ -320,7 +322,7 @@ export async function deactivateLicense(): Promise<{ success: boolean; error?: s
     }
   } catch {
     // Continue anyway - allow offline deactivation
-    console.log('[license] Could not reach server, deactivating locally')
+    log.warn('Could not reach server, deactivating locally')
   }
 
   clearLicense()
@@ -385,7 +387,7 @@ export async function getCustomerPortalUrl(): Promise<{
 
     return { success: true, url: data.link }
   } catch (error) {
-    console.error('[license] Customer portal error:', error)
+    log.error('Customer portal error:', error instanceof Error ? error.message : String(error))
     return { success: false, error: 'Network error. Please check your connection.' }
   }
 }

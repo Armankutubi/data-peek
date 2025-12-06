@@ -2,6 +2,9 @@ import { app, safeStorage } from 'electron'
 import { existsSync, unlinkSync, readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { randomBytes } from 'crypto'
+import { createLogger } from './lib/logger'
+
+const log = createLogger('storage')
 
 // electron-store requires Record<string, any> constraint
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +35,7 @@ export function getEncryptionKey(): string {
 
   // Check if safeStorage is available
   if (!safeStorage.isEncryptionAvailable()) {
-    console.warn('[storage] safeStorage not available, using static fallback key')
+    log.warn('safeStorage not available, using static fallback key')
     cachedEncryptionKey = 'data-peek-fallback-key-v1'
     return cachedEncryptionKey
   }
@@ -44,8 +47,8 @@ export function getEncryptionKey(): string {
       cachedEncryptionKey = safeStorage.decryptString(encryptedKey)
       return cachedEncryptionKey
     }
-  } catch (error) {
-    console.warn('[storage] Failed to read encryption key, generating new one:', error)
+  } catch {
+    log.warn('Failed to read encryption key, generating new one')
     // Delete corrupted key file
     try {
       unlinkSync(keyFilePath)
@@ -60,10 +63,10 @@ export function getEncryptionKey(): string {
     const encryptedKey = safeStorage.encryptString(newKey)
     writeFileSync(keyFilePath, encryptedKey)
     cachedEncryptionKey = newKey
-    console.log('[storage] Generated and stored new encryption key')
+    log.debug('Generated and stored new encryption key')
     return cachedEncryptionKey
   } catch (error) {
-    console.error('[storage] Failed to store encryption key:', error)
+    log.error('Failed to store encryption key:', error)
     // Fall back to static key if we can't write
     cachedEncryptionKey = 'data-peek-fallback-key-v1'
     return cachedEncryptionKey
@@ -79,10 +82,10 @@ function deleteStoreFile(storeName: string): void {
     const storePath = join(userDataPath, `${storeName}.json`)
     if (existsSync(storePath)) {
       unlinkSync(storePath)
-      console.log(`[storage] Deleted corrupted store: ${storePath}`)
+      log.warn('Deleted corrupted store:', storePath)
     }
   } catch (error) {
-    console.error(`[storage] Failed to delete store file:`, error)
+    log.error('Failed to delete store file:', error)
   }
 }
 
@@ -115,8 +118,8 @@ export class DpStorage<T extends StoreRecord> {
     try {
       const store = new Store<T>(options)
       return new DpStorage(store, options.name)
-    } catch (error) {
-      console.warn(`[storage] Store "${options.name}" corrupted, recreating:`, error)
+    } catch {
+      log.warn(`Store "${options.name}" corrupted, recreating`)
       deleteStoreFile(options.name)
       const store = new Store<T>(options)
       return new DpStorage(store, options.name)
@@ -194,8 +197,8 @@ export class DpSecureStorage<T extends StoreRecord> {
     try {
       const store = new Store<T>({ ...options, encryptionKey })
       return new DpSecureStorage(store, options.name)
-    } catch (error) {
-      console.warn(`[storage] Secure store "${options.name}" corrupted, recreating:`, error)
+    } catch {
+      log.warn(`Secure store "${options.name}" corrupted, recreating`)
       deleteStoreFile(options.name)
       const store = new Store<T>({ ...options, encryptionKey })
       return new DpSecureStorage(store, options.name)

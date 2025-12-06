@@ -5,6 +5,9 @@
 import { Client } from 'pg'
 import type { Connection } from 'mysql2/promise'
 import type { Request as MSSQLRequest } from 'mssql'
+import { createLogger } from './lib/logger'
+
+const log = createLogger('query-tracker')
 
 /** Supported cancellable handle types */
 export type CancellableHandle =
@@ -30,7 +33,7 @@ export function registerQuery(executionId: string, handle: CancellableHandle): v
     handle,
     startedAt: Date.now()
   })
-  console.log(`[query-tracker] Registered query ${executionId}`)
+  log.debug(`Registered query ${executionId}`)
 }
 
 /**
@@ -38,7 +41,7 @@ export function registerQuery(executionId: string, handle: CancellableHandle): v
  */
 export function unregisterQuery(executionId: string): void {
   if (activeQueries.delete(executionId)) {
-    console.log(`[query-tracker] Unregistered query ${executionId}`)
+    log.debug(`Unregistered query ${executionId}`)
   }
 }
 
@@ -54,7 +57,7 @@ export async function cancelQuery(
     return { cancelled: false, error: 'Query not found or already completed' }
   }
 
-  console.log(`[query-tracker] Cancelling query ${executionId}`)
+  log.debug(`Cancelling query ${executionId}`)
 
   try {
     switch (query.handle.type) {
@@ -79,7 +82,7 @@ export async function cancelQuery(
     return { cancelled: true }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    console.error(`[query-tracker] Error cancelling query ${executionId}:`, error)
+    log.error(`Error cancelling query ${executionId}:`, errorMessage)
     // Still remove from active queries even if cancellation had an error
     activeQueries.delete(executionId)
     return { cancelled: false, error: errorMessage }

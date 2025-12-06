@@ -71,6 +71,9 @@ const responseSchema = z.object({
 })
 
 import { DpStorage } from './storage'
+import { createLogger } from './lib/logger'
+
+const log = createLogger('ai-service')
 
 // Chat history store structure: map of connectionId -> sessions
 type ChatHistoryStore = Record<string, ChatSession[]>
@@ -135,7 +138,7 @@ function migrateLegacyConfig(): void {
     aiStore.set('multiProviderConfig', newConfig)
     // Clear legacy config after migration
     aiStore.set('aiConfig', null)
-    console.log('[ai-service] Migrated legacy AI config to multi-provider format')
+    log.info('Migrated legacy AI config to multi-provider format')
   }
 }
 
@@ -256,9 +259,7 @@ export function getAIConfig(): AIConfig | null {
 export function setAIConfig(config: AIConfig | null): void {
   if (!config) {
     // Don't clear everything when null is passed - use clearAIConfig() for that
-    console.log(
-      '[ai-service] setAIConfig called with null, ignoring. Use clearAIConfig() to clear.'
-    )
+    log.debug('setAIConfig called with null, ignoring. Use clearAIConfig() to clear.')
     return
   }
 
@@ -507,7 +508,7 @@ export async function generateChatResponse(
     }
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
-    console.error('[ai-service] generateChatResponse error:', JSON.stringify(error, null, 2))
+    log.error('generateChatResponse error:', message)
 
     return { success: false, error: message }
   }
