@@ -25,6 +25,7 @@ import type {
   QueryOptions
 } from '../db-adapter'
 import { registerQuery, unregisterQuery } from '../query-tracker'
+import { closeTunnel, createTunnel, TunnelSession } from '../ssh-tunnel-service'
 import { splitStatements } from '../lib/sql-parser'
 
 /** Split SQL into statements for PostgreSQL */
@@ -59,12 +60,22 @@ export class PostgresAdapter implements DatabaseAdapter {
   readonly dbType = 'postgresql' as const
 
   async connect(config: ConnectionConfig): Promise<void> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
+
     const client = new Client(config)
     await client.connect()
     await client.end()
+    closeTunnel(tunnelSession)
   }
 
   async query(config: ConnectionConfig, sql: string): Promise<AdapterQueryResult> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -84,6 +95,7 @@ export class PostgresAdapter implements DatabaseAdapter {
       }
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
@@ -92,6 +104,10 @@ export class PostgresAdapter implements DatabaseAdapter {
     sql: string,
     options?: QueryOptions
   ): Promise<AdapterMultiQueryResult> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -163,6 +179,7 @@ export class PostgresAdapter implements DatabaseAdapter {
         unregisterQuery(options.executionId)
       }
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
@@ -171,6 +188,10 @@ export class PostgresAdapter implements DatabaseAdapter {
     sql: string,
     params: unknown[]
   ): Promise<{ rowCount: number | null }> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -179,6 +200,7 @@ export class PostgresAdapter implements DatabaseAdapter {
       return { rowCount: res.rowCount }
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
@@ -186,6 +208,10 @@ export class PostgresAdapter implements DatabaseAdapter {
     config: ConnectionConfig,
     statements: Array<{ sql: string; params: unknown[] }>
   ): Promise<{ rowsAffected: number; results: Array<{ rowCount: number | null }> }> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -208,13 +234,17 @@ export class PostgresAdapter implements DatabaseAdapter {
       throw error
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
   async getSchemas(config: ConnectionConfig): Promise<SchemaInfo[]> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
-
     try {
       // Query 1: Get all schemas (excluding system schemas)
       const schemasResult = await client.query(`
@@ -458,10 +488,15 @@ export class PostgresAdapter implements DatabaseAdapter {
       return Array.from(schemaMap.values())
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
   async explain(config: ConnectionConfig, sql: string, analyze: boolean): Promise<ExplainResult> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -483,6 +518,7 @@ export class PostgresAdapter implements DatabaseAdapter {
       }
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
@@ -491,6 +527,10 @@ export class PostgresAdapter implements DatabaseAdapter {
     schema: string,
     table: string
   ): Promise<TableDefinition> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -727,10 +767,15 @@ export class PostgresAdapter implements DatabaseAdapter {
       }
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
   async getSequences(config: ConnectionConfig): Promise<SequenceInfo[]> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -756,10 +801,15 @@ export class PostgresAdapter implements DatabaseAdapter {
       }))
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 
   async getTypes(config: ConnectionConfig): Promise<CustomTypeInfo[]> {
+    let tunnelSession: TunnelSession | null = null
+    if (config.ssh) {
+      tunnelSession = await createTunnel(config)
+    }
     const client = new Client(config)
     await client.connect()
 
@@ -807,6 +857,7 @@ export class PostgresAdapter implements DatabaseAdapter {
       ]
     } finally {
       await client.end()
+      closeTunnel(tunnelSession)
     }
   }
 }

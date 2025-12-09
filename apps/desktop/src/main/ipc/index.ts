@@ -7,6 +7,7 @@ import { registerLicenseHandlers } from './license-handlers'
 import { registerSavedQueriesHandlers } from './saved-queries-handlers'
 import { registerAIHandlers } from './ai-handlers'
 import { createLogger } from '../lib/logger'
+import { registerFileHandlers } from './file-handlers'
 
 const log = createLogger('ipc')
 
@@ -39,6 +40,9 @@ export function registerAllHandlers(stores: IpcStores): void {
 
   // AI features
   registerAIHandlers()
+
+  //File handler
+  registerFileHandlers()
 
   log.debug('All handlers registered')
 }
