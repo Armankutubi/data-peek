@@ -177,9 +177,18 @@ export const mdxComponents: MDXComponents = {
       <div className="relative my-6 group">
         <div className="flex items-center justify-between px-4 py-2 bg-[#1a1b26] border border-[--color-border] border-b-0 rounded-t-lg">
           <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[--color-error]/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[--color-warning]/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[--color-success]/60" />
+            <span
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ backgroundColor: 'rgba(248, 113, 113, 0.6)' }}
+            />
+            <span
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ backgroundColor: 'rgba(251, 191, 36, 0.6)' }}
+            />
+            <span
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ backgroundColor: 'rgba(74, 222, 128, 0.6)' }}
+            />
           </div>
           <div className="flex items-center gap-2">
             {getLanguageIcon(language)}

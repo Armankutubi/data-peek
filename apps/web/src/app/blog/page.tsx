@@ -79,6 +79,27 @@ export default function BlogPage() {
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <article className="relative p-6 md:p-8 rounded-xl bg-[--color-surface] border border-[--color-border] hover:border-[--color-accent]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[--color-accent-glow]">
+                      {/* Terminal-style header */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex gap-1.5">
+                          <span
+                            className="w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: 'rgba(248, 113, 113, 0.6)' }}
+                          />
+                          <span
+                            className="w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: 'rgba(251, 191, 36, 0.6)' }}
+                          />
+                          <span
+                            className="w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: 'rgba(74, 222, 128, 0.6)' }}
+                          />
+                        </div>
+                        <span className="text-xs text-[--color-text-muted] ml-2 font-mono">
+                          {post.slug}.mdx
+                        </span>
+                      </div>
+
                       <h2
                         className="text-xl md:text-2xl font-semibold mb-3 group-hover:text-[--color-accent] transition-colors"
                         style={{ fontFamily: 'var(--font-display)' }}
