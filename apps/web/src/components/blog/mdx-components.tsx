@@ -76,7 +76,7 @@ const getLanguageIcon = (language: string): ReactNode => {
 export const mdxComponents: MDXComponents = {
   h1: ({ children }: ComponentPropsWithoutRef<'h1'>) => (
     <h1
-      className="text-3xl md:text-4xl font-bold mb-6 mt-12 first:mt-0"
+      className="text-3xl md:text-4xl font-bold mb-6 mt-16 first:mt-0 tracking-tight"
       style={{ fontFamily: 'var(--font-display)' }}
     >
       {children}
@@ -84,23 +84,25 @@ export const mdxComponents: MDXComponents = {
   ),
   h2: ({ children }: ComponentPropsWithoutRef<'h2'>) => (
     <h2
-      className="text-2xl md:text-3xl font-semibold mb-4 mt-10 text-[--color-text-primary] border-b border-[--color-border] pb-2"
+      className="group text-2xl md:text-3xl font-semibold mb-4 mt-14 text-[--color-text-primary] pb-3 border-b border-[--color-border-subtle] tracking-tight"
       style={{ fontFamily: 'var(--font-display)' }}
     >
+      <span className="text-[--color-accent] opacity-0 group-hover:opacity-100 transition-opacity mr-2">#</span>
       {children}
     </h2>
   ),
   h3: ({ children }: ComponentPropsWithoutRef<'h3'>) => (
     <h3
-      className="text-xl md:text-2xl font-semibold mb-3 mt-8 text-[--color-text-primary]"
+      className="group text-xl md:text-2xl font-semibold mb-3 mt-10 text-[--color-text-primary] tracking-tight"
       style={{ fontFamily: 'var(--font-display)' }}
     >
+      <span className="text-[--color-accent] opacity-0 group-hover:opacity-100 transition-opacity mr-2">##</span>
       {children}
     </h3>
   ),
   h4: ({ children }: ComponentPropsWithoutRef<'h4'>) => (
     <h4
-      className="text-lg font-semibold mb-2 mt-6 text-[--color-text-primary]"
+      className="text-lg font-semibold mb-2 mt-8 text-[--color-text-primary]"
       style={{ fontFamily: 'var(--font-display)' }}
     >
       {children}
@@ -146,15 +148,16 @@ export const mdxComponents: MDXComponents = {
     <li className="leading-relaxed">{children}</li>
   ),
   blockquote: ({ children }: ComponentPropsWithoutRef<'blockquote'>) => (
-    <blockquote className="border-l-4 border-[--color-accent] pl-4 py-2 my-6 bg-[--color-surface] rounded-r-lg">
-      <div className="text-[--color-text-secondary] italic">{children}</div>
+    <blockquote className="relative border-l-2 border-[--color-accent] pl-6 py-4 my-8 bg-gradient-to-r from-[--color-surface] to-transparent rounded-r-xl overflow-hidden">
+      <div className="absolute top-3 left-3 text-4xl text-[--color-accent]/20 font-serif leading-none">"</div>
+      <div className="relative text-[--color-text-secondary] italic text-lg">{children}</div>
     </blockquote>
   ),
   code: ({ children, className, ...props }: ComponentPropsWithoutRef<'code'>) => {
     const isInline = !className && !('data-language' in props)
     if (isInline) {
       return (
-        <code className="px-1.5 py-0.5 rounded bg-[--color-surface-elevated] text-[--color-accent] text-sm font-mono">
+        <code className="px-2 py-1 rounded-md bg-[--color-surface-elevated] text-[--color-accent] text-[0.9em] font-mono border border-[--color-border-subtle]">
           {children}
         </code>
       )
@@ -174,66 +177,78 @@ export const mdxComponents: MDXComponents = {
     const language = dataLanguage || 'code'
 
     return (
-      <div className="relative my-6 group">
-        <div className="flex items-center justify-between px-4 py-2 bg-[#1a1b26] border border-[--color-border] border-b-0 rounded-t-lg">
-          <div className="flex gap-1.5">
-            <span
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ backgroundColor: 'rgba(248, 113, 113, 0.6)' }}
-            />
-            <span
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ backgroundColor: 'rgba(251, 191, 36, 0.6)' }}
-            />
-            <span
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ backgroundColor: 'rgba(74, 222, 128, 0.6)' }}
-            />
+      <div className="relative my-8 group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-[--color-accent]/10 to-transparent rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="relative">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#1a1b26] border border-[--color-border] border-b-0 rounded-t-xl">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'rgba(248, 113, 113, 0.6)' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'rgba(251, 191, 36, 0.6)' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'rgba(74, 222, 128, 0.6)' }} />
+              </div>
+              <span className="text-xs text-[--color-text-muted] opacity-60 font-mono">~/{language}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {getLanguageIcon(language)}
+              <span className="text-xs text-[--color-text-muted] font-medium uppercase tracking-wider">{language}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {getLanguageIcon(language)}
-            <span className="text-xs text-[--color-text-muted]">{language}</span>
-          </div>
+          <pre
+            className="p-5 border border-[--color-border] border-t-0 rounded-b-xl overflow-x-auto text-sm leading-relaxed [&>code]:bg-transparent"
+            style={{ background: '#1a1b26' }}
+            {...props}
+          >
+            {children}
+          </pre>
         </div>
-        <pre
-          className="p-4 border border-[--color-border] border-t-0 rounded-b-lg overflow-x-auto text-sm leading-relaxed [&>code]:bg-transparent"
-          style={{ background: '#1a1b26' }}
-          {...props}
-        >
-          {children}
-        </pre>
       </div>
     )
   },
-  hr: () => <hr className="my-8 border-[--color-border]" />,
+  hr: () => (
+    <div className="my-12 flex items-center gap-4">
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[--color-border]" />
+      <div className="flex gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-[--color-accent]/40" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[--color-accent]/60" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[--color-accent]/40" />
+      </div>
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[--color-border]" />
+    </div>
+  ),
   table: ({ children }: ComponentPropsWithoutRef<'table'>) => (
-    <div className="my-6 overflow-x-auto">
-      <table className="w-full border-collapse border border-[--color-border] rounded-lg overflow-hidden">
+    <div className="my-8 overflow-x-auto rounded-xl border border-[--color-border] bg-[--color-surface]">
+      <table className="w-full border-collapse">
         {children}
       </table>
     </div>
   ),
   thead: ({ children }: ComponentPropsWithoutRef<'thead'>) => (
-    <thead className="bg-[--color-surface-elevated]">{children}</thead>
+    <thead className="bg-[--color-surface-elevated] border-b border-[--color-border]">{children}</thead>
   ),
-  tbody: ({ children }: ComponentPropsWithoutRef<'tbody'>) => <tbody>{children}</tbody>,
+  tbody: ({ children }: ComponentPropsWithoutRef<'tbody'>) => (
+    <tbody className="divide-y divide-[--color-border-subtle]">{children}</tbody>
+  ),
   tr: ({ children }: ComponentPropsWithoutRef<'tr'>) => (
-    <tr className="border-b border-[--color-border]">{children}</tr>
+    <tr className="hover:bg-[--color-surface-elevated]/50 transition-colors">{children}</tr>
   ),
   th: ({ children }: ComponentPropsWithoutRef<'th'>) => (
-    <th className="px-4 py-3 text-left text-sm font-semibold text-[--color-text-primary]">
+    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-[--color-text-muted]">
       {children}
     </th>
   ),
   td: ({ children }: ComponentPropsWithoutRef<'td'>) => (
-    <td className="px-4 py-3 text-sm text-[--color-text-secondary]">{children}</td>
+    <td className="px-5 py-4 text-sm text-[--color-text-secondary]">{children}</td>
   ),
   img: ({ src, alt }: ComponentPropsWithoutRef<'img'>) => (
-    <figure className="my-6">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={alt || ''} className="w-full rounded-lg border border-[--color-border]" />
+    <figure className="my-10 group">
+      <div className="relative overflow-hidden rounded-xl border border-[--color-border] bg-[--color-surface]">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={alt || ''} className="w-full" />
+      </div>
       {alt && (
-        <figcaption className="mt-2 text-center text-sm text-[--color-text-muted]">{alt}</figcaption>
+        <figcaption className="mt-3 text-center text-sm text-[--color-text-muted] italic">{alt}</figcaption>
       )}
     </figure>
   ),

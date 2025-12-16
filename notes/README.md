@@ -1,14 +1,37 @@
-# data-peek Notes
+# data-peek Notes & Blog Posts
 
-Technical notes and implementation details that could become blog posts.
+This folder is the single source of truth for technical notes and blog posts. Files with `published: true` in frontmatter are automatically served on the website's blog.
 
-## Contents
+## Published Posts
 
-| File | Topic | Blog-Ready |
-|------|-------|------------|
-| [ai-implementation.md](./ai-implementation.md) | Building the AI SQL Assistant | Yes |
-| [ai-deep-dive.md](./ai-deep-dive.md) | Technical deep dive into components | Yes |
-| [perf-indicator-implementation.md](./perf-indicator-implementation.md) | Query Performance Analyzer with EXPLAIN | Yes |
+| File | Topic |
+|------|-------|
+| [building-ai-sql-assistant.mdx](./building-ai-sql-assistant.mdx) | Building the AI SQL Assistant |
+| [ai-assistant-deep-dive.mdx](./ai-assistant-deep-dive.mdx) | Technical deep dive into AI components |
+| [query-performance-analyzer.mdx](./query-performance-analyzer.mdx) | Query Performance Analyzer with EXPLAIN |
+
+## Creating a New Post
+
+1. Create a new `.mdx` file in this folder
+2. Add frontmatter at the top:
+
+```yaml
+---
+title: "Your Post Title"
+description: "Brief description for SEO and previews"
+date: "YYYY-MM-DD"
+author: "Rohith Gilla"
+tags: ["Tag1", "Tag2"]
+published: true  # Set to false to keep as draft
+---
+```
+
+3. Write your content in MDX (Markdown + JSX)
+4. The post will appear on `/blog` when `published: true`
+
+## Draft Posts
+
+Set `published: false` in frontmatter to keep a post as a draft. It won't appear on the blog until you change it to `true`.
 
 ## Future Topics
 
@@ -17,11 +40,3 @@ Technical notes and implementation details that could become blog posts.
 - [ ] Building a table designer with DDL generation
 - [ ] Monaco editor integration tips
 - [ ] ERD visualization with React Flow
-
-## Publishing
-
-These notes are written in a style that can be published as blog posts with minimal editing. Each file:
-- Has a compelling hook/intro
-- Includes code examples
-- Explains the "why" not just the "how"
-- Ends with lessons learned or next steps

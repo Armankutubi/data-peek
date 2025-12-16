@@ -7,6 +7,7 @@ import { Header } from '@/components/marketing/header'
 import { Footer } from '@/components/marketing/footer'
 import { getBlogPost, getAllBlogSlugs } from '@/lib/blog'
 import { mdxComponents } from '@/components/blog/mdx-components'
+import { ReadingProgress } from '@/components/blog/reading-progress'
 import { ArrowLeft, Calendar, Clock, User } from 'lucide-react'
 
 interface BlogPostPageProps {
@@ -66,30 +67,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="min-h-screen">
+      <ReadingProgress />
       <Header />
       <main className="pt-20 md:pt-24">
-        {/* Back link */}
-        <div className="max-w-3xl mx-auto px-6 pt-8">
+        <div className="max-w-4xl mx-auto px-6 pt-8">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-[--color-text-muted] hover:text-[--color-accent] transition-colors"
+            className="group inline-flex items-center gap-2 text-sm text-[--color-text-muted] hover:text-[--color-accent] transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to blog
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span>Back to blog</span>
           </Link>
         </div>
 
-        {/* Article Header */}
-        <header className="py-12 md:py-16">
-          <div className="max-w-3xl mx-auto px-6">
+        <header className="relative py-12 md:py-20 overflow-hidden">
+          <div className="absolute inset-0 grid-pattern opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[--color-background]" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[--color-accent]/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative max-w-4xl mx-auto px-6">
             <div className="animate-fade-in-up">
-              {/* Tags */}
               {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-6">
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2.5 py-1 text-xs rounded-full bg-[--color-surface] border border-[--color-border] text-[--color-text-muted]"
+                      className="px-3 py-1 text-xs font-medium rounded-full bg-[--color-accent]/10 border border-[--color-accent]/20 text-[--color-accent]"
                     >
                       {tag}
                     </span>
@@ -98,36 +101,45 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               )}
 
               <h1
-                className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6"
+                className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 {post.title}
               </h1>
 
-              <p className="text-lg text-[--color-text-secondary] mb-8">{post.description}</p>
+              <p className="text-lg md:text-xl text-[--color-text-secondary] mb-10 max-w-3xl leading-relaxed">
+                {post.description}
+              </p>
 
-              {/* Meta info */}
-              <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 border-y border-[--color-border] text-sm">
-                <div className="flex items-center gap-2 text-[--color-text-muted]">
-                  <User className="w-4 h-4" />
-                  <span>{post.author}</span>
+              <div className="flex flex-wrap items-center gap-6 py-6 border-t border-b border-[--color-border-subtle]">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[--color-accent]/20 to-[--color-accent]/5 border border-[--color-accent]/30 flex items-center justify-center">
+                    <User className="w-4 h-4 text-[--color-accent]" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-[--color-text-primary]">{post.author}</div>
+                    <div className="text-xs text-[--color-text-muted]">Author</div>
+                  </div>
                 </div>
+
+                <div className="w-px h-8 bg-[--color-border-subtle] hidden sm:block" />
+
                 <div className="flex items-center gap-2 text-[--color-text-muted]">
                   <Calendar className="w-4 h-4" />
-                  <time dateTime={post.date}>{formatDate(post.date)}</time>
+                  <time dateTime={post.date} className="text-sm">{formatDate(post.date)}</time>
                 </div>
+
                 <div className="flex items-center gap-2 text-[--color-text-muted]">
                   <Clock className="w-4 h-4" />
-                  <span>{post.readingTime}</span>
+                  <span className="text-sm">{post.readingTime}</span>
                 </div>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Article Content */}
         <article className="pb-16 md:pb-24">
-          <div className="max-w-3xl mx-auto px-6">
+          <div className="max-w-4xl mx-auto px-6">
             <div className="prose prose-invert max-w-none animate-fade-in-up delay-200">
               <MDXRemote
                 source={post.content}
@@ -151,28 +163,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </article>
 
-        {/* Bottom CTA */}
-        <section className="py-12 md:py-16 border-t border-[--color-border]">
-          <div className="max-w-3xl mx-auto px-6 text-center">
+        <section className="relative py-16 md:py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[--color-surface]/50 to-[--color-surface]" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[--color-border] to-transparent" />
+
+          <div className="relative max-w-4xl mx-auto px-6 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[--color-accent]/20 to-[--color-accent]/5 border border-[--color-accent]/30 mb-8">
+              <span className="text-2xl">🚀</span>
+            </div>
+
             <h2
-              className="text-2xl font-semibold mb-4"
+              className="text-2xl md:text-3xl font-bold mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Ready to try data-peek?
             </h2>
-            <p className="text-[--color-text-secondary] mb-6">
-              Download the free version and see why developers love it.
+            <p className="text-[--color-text-secondary] mb-8 max-w-lg mx-auto">
+              A fast, minimal SQL client that gets out of your way.
+              Download free and see the difference.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/download"
-                className="px-6 py-3 rounded-lg bg-[--color-accent] text-[--color-background] font-semibold hover:bg-[--color-accent-dim] transition-colors"
+                className="group relative px-8 py-4 rounded-xl bg-[--color-accent] text-[--color-background] font-semibold hover:bg-[--color-accent-dim] transition-all duration-300 overflow-hidden"
               >
-                Download Free
+                <span className="relative z-10">Download Free</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </Link>
               <Link
                 href="/blog"
-                className="px-6 py-3 rounded-lg border border-[--color-border] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:border-[--color-text-muted] transition-colors"
+                className="px-8 py-4 rounded-xl border border-[--color-border] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:border-[--color-text-muted] hover:bg-[--color-surface] transition-all duration-300"
               >
                 More Articles
               </Link>

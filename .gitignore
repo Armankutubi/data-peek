@@ -32,3 +32,6 @@ pnpm-debug.log*
 
 # Test coverage
 coverage/
+
+# MCP
+.playwright-mcp/
