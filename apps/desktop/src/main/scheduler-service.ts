@@ -1,5 +1,6 @@
 import { Notification } from 'electron'
 import { CronExpressionParser } from 'cron-parser'
+import cron, { ScheduledTask } from 'node-cron'
 import { v4 as uuid } from 'uuid'
 import type {
   ScheduledQuery,
@@ -23,8 +24,8 @@ let scheduledQueriesStore: DpStorage<{ scheduledQueries: ScheduledQuery[] }>
 let scheduledQueryRunsStore: DpStorage<{ runs: ScheduledQueryRun[] }>
 let connectionsStore: DpStorage<{ connections: ConnectionConfig[] }>
 
-// Active timers for scheduled queries
-const activeTimers = new Map<string, NodeJS.Timeout>()
+// Active cron jobs for scheduled queries
+const activeJobs = new Map<string, ScheduledTask>()
 
 /**
  * Initialize the scheduler service and storage
@@ -48,7 +49,7 @@ export async function initSchedulerService(
   const queries = scheduledQueriesStore.get('scheduledQueries', [])
   for (const query of queries) {
     if (query.status === 'active') {
-      scheduleNextRun(query)
+      scheduleCronJob(query)
     }
   }
 
@@ -86,14 +87,14 @@ function getNextRunTime(schedule: ScheduledQuery['schedule']): number {
 }
 
 /**
- * Schedule the next run for a query
+ * Schedule a cron job for a query
  */
-function scheduleNextRun(query: ScheduledQuery): void {
-  // Clear any existing timer
-  const existingTimer = activeTimers.get(query.id)
-  if (existingTimer) {
-    clearTimeout(existingTimer)
-    activeTimers.delete(query.id)
+function scheduleCronJob(query: ScheduledQuery): void {
+  // Stop any existing job
+  const existingJob = activeJobs.get(query.id)
+  if (existingJob) {
+    existingJob.stop()
+    activeJobs.delete(query.id)
   }
 
   // Don't schedule if not active
@@ -101,20 +102,38 @@ function scheduleNextRun(query: ScheduledQuery): void {
     return
   }
 
+  const cronExpression = getCronExpression(query.schedule)
+  const timezone = query.schedule.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  // Validate cron expression with node-cron
+  if (!cron.validate(cronExpression)) {
+    log.error(`Invalid cron expression for "${query.name}":`, cronExpression)
+    updateScheduledQueryInternal(query.id, {
+      status: 'error',
+      lastError: `Invalid cron expression: ${cronExpression}`
+    })
+    return
+  }
+
+  log.debug(`Scheduling "${query.name}" with cron: ${cronExpression} (${timezone})`)
+
+  // Calculate and store next run time
   const nextRunAt = getNextRunTime(query.schedule)
-  const delay = Math.max(0, nextRunAt - Date.now())
-
-  log.debug(`Scheduling "${query.name}" to run at`, new Date(nextRunAt).toISOString())
-
-  // Update the stored nextRunAt
   updateScheduledQueryInternal(query.id, { nextRunAt })
 
-  // Set timeout for execution
-  const timer = setTimeout(async () => {
-    await executeScheduledQuery(query.id)
-  }, delay)
+  // Create the cron job
+  const job = cron.schedule(
+    cronExpression,
+    async () => {
+      await executeScheduledQuery(query.id)
+    },
+    {
+      timezone,
+      scheduled: true
+    }
+  )
 
-  activeTimers.set(query.id, timer)
+  activeJobs.set(query.id, job)
 }
 
 /**
@@ -212,12 +231,13 @@ async function executeScheduledQuery(queryId: string): Promise<void> {
   // Store the run
   saveRun(run)
 
-  // Schedule the next run (even on error, so user can fix and it will try again)
+  // Update nextRunAt for UI display (cron job continues running automatically)
   const updatedQuery = scheduledQueriesStore
     .get('scheduledQueries', [])
     .find((q) => q.id === queryId)
-  if (updatedQuery) {
-    scheduleNextRun(updatedQuery)
+  if (updatedQuery && updatedQuery.status === 'active') {
+    const nextRunAt = getNextRunTime(updatedQuery.schedule)
+    updateScheduledQueryInternal(updatedQuery.id, { nextRunAt })
   }
 }
 
@@ -284,10 +304,6 @@ function updateScheduledQueryInternal(
   return queries[index]
 }
 
-// ============================================================================
-// PUBLIC API
-// ============================================================================
-
 /**
  * List all scheduled queries
  */
@@ -321,7 +337,7 @@ export function createScheduledQuery(input: CreateScheduledQueryInput): Schedule
   scheduledQueriesStore.set('scheduledQueries', queries)
 
   // Schedule the first run
-  scheduleNextRun(query)
+  scheduleCronJob(query)
 
   log.debug('Created scheduled query:', query.name)
   return query
@@ -357,7 +373,7 @@ export function updateScheduledQuery(
 
   // Reschedule if status or schedule changed
   if (updates.status !== undefined || updates.schedule !== undefined) {
-    scheduleNextRun(queries[index])
+    scheduleCronJob(queries[index])
   }
 
   log.debug('Updated scheduled query:', queries[index].name)
@@ -368,11 +384,11 @@ export function updateScheduledQuery(
  * Delete a scheduled query
  */
 export function deleteScheduledQuery(id: string): boolean {
-  // Clear any active timer
-  const timer = activeTimers.get(id)
-  if (timer) {
-    clearTimeout(timer)
-    activeTimers.delete(id)
+  // Stop any active cron job
+  const job = activeJobs.get(id)
+  if (job) {
+    job.stop()
+    activeJobs.delete(id)
   }
 
   const queries = scheduledQueriesStore.get('scheduledQueries', [])
@@ -457,11 +473,11 @@ export function clearScheduledQueryRuns(queryId: string): void {
  * Stop all scheduled queries (for app shutdown)
  */
 export function stopAllSchedules(): void {
-  for (const [id, timer] of activeTimers) {
-    clearTimeout(timer)
+  for (const [id, job] of activeJobs) {
+    job.stop()
     log.debug('Stopped schedule:', id)
   }
-  activeTimers.clear()
+  activeJobs.clear()
 }
 
 /**

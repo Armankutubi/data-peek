@@ -11,7 +11,8 @@ import {
   Pencil,
   History,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Plus
 } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
@@ -94,6 +95,7 @@ export function ScheduledQueries() {
   const [selectedQueryForRuns, setSelectedQueryForRuns] = useState<ScheduledQuery | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [runningNow, setRunningNow] = useState<string | null>(null)
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false)
 
   // Initialize on mount
   useEffect(() => {
@@ -168,8 +170,15 @@ export function ScheduledQueries() {
           <SidebarGroupContent>
             <SidebarMenu>
               {sortedQueries.length === 0 ? (
-                <div className="px-2 py-4 text-xs text-muted-foreground text-center">
-                  No scheduled queries yet
+                <div className="px-2 py-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-2">No scheduled queries yet</p>
+                  <SidebarMenuButton
+                    onClick={() => setIsFormDialogOpen(true)}
+                    className="mx-auto w-auto"
+                  >
+                    <Plus className="size-4" />
+                    <span>New Schedule</span>
+                  </SidebarMenuButton>
                 </div>
               ) : (
                 sortedQueries.slice(0, 5).map((item) => (
@@ -302,6 +311,12 @@ export function ScheduledQueries() {
             if (!open) setEditingQuery(null)
           }}
           editingQuery={editingQuery}
+        />
+
+        <ScheduledQueryFormDialog
+          open={isFormDialogOpen}
+          onOpenChange={setIsFormDialogOpen}
+          editingQuery={null}
         />
 
         <ScheduledQueryRunsDialog
