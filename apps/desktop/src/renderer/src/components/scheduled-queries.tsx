@@ -51,6 +51,9 @@ import { SCHEDULE_PRESETS } from '@shared/index'
 function formatFutureTime(timestamp: number): string {
   const now = Date.now()
   const diffMs = timestamp - now
+
+  if (diffMs < 0) return 'overdue'
+
   const diffMins = Math.floor(diffMs / (1000 * 60))
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
 
