@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect, useMemo } from 'react'
 import { Clock, Calendar, Info } from 'lucide-react'
 

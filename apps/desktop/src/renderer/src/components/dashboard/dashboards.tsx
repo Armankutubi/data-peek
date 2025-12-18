@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import {

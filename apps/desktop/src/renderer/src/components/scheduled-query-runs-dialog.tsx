@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect, useCallback } from 'react'
 import { History, CheckCircle, XCircle, Clock, Trash2, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'

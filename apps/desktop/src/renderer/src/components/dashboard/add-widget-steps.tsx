@@ -1,5 +1,3 @@
-'use client'
-
 import { Database, FileText, Search, Play, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'

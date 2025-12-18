@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect, useState, useCallback } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
 import {

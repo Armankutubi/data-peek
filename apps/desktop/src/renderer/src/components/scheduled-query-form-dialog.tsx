@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect, useCallback } from 'react'
 import { Clock, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
