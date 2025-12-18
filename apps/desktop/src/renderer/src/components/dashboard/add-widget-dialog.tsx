@@ -114,6 +114,7 @@ export function AddWidgetDialog({ open, onOpenChange, dashboardId }: AddWidgetDi
 
   const [step, setStep] = useState<Step>('type')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Widget basic info
   const [widgetName, setWidgetName] = useState('')
@@ -166,6 +167,7 @@ export function AddWidgetDialog({ open, onOpenChange, dashboardId }: AddWidgetDi
       setSuffix('')
       setMaxRows(10)
       setWidgetWidth('auto')
+      setError(null)
     }
   }, [open, connections, initializeSavedQueries])
 
@@ -225,6 +227,7 @@ export function AddWidgetDialog({ open, onOpenChange, dashboardId }: AddWidgetDi
     if (!canProceed()) return
 
     setIsSubmitting(true)
+    setError(null)
 
     try {
       const dataSource: WidgetDataSource = {
@@ -282,6 +285,10 @@ export function AddWidgetDialog({ open, onOpenChange, dashboardId }: AddWidgetDi
 
       await addWidget(dashboardId, input)
       onOpenChange(false)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to add widget'
+      console.error('Failed to add widget:', err)
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -610,6 +617,12 @@ export function AddWidgetDialog({ open, onOpenChange, dashboardId }: AddWidgetDi
             </div>
           )}
         </div>
+
+        {error && (
+          <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+            {error}
+          </div>
+        )}
 
         <DialogFooter className="flex justify-between">
           <div>

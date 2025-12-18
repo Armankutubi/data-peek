@@ -509,9 +509,12 @@ export async function runScheduledQueryNow(id: string): Promise<ScheduledQueryRu
   // Execute immediately
   await executeScheduledQuery(id)
 
-  // Return the latest run
+  // Return the latest run (sort by startedAt descending to get most recent)
   const runs = scheduledQueryRunsStore.get('runs', [])
-  return runs.find((r) => r.scheduledQueryId === id) || null
+  const queryRuns = runs
+    .filter((r) => r.scheduledQueryId === id)
+    .sort((a, b) => (b.startedAt ?? 0) - (a.startedAt ?? 0))
+  return queryRuns[0] || null
 }
 
 /**
